@@ -28,7 +28,7 @@ export const bookBaseSchema = z.object({
     .trim()
     .min(2, { message: "Author name must be at least 2 characters long" })
     .regex(/^[a-zA-Z\s\/\-.&]+$/, {
-      message: "Author name must contain only alphabetic characters",
+      message: "Author name must contain only  alphabetic characters",
     }),
   publisher: z
     .string()

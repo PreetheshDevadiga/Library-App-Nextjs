@@ -10,7 +10,7 @@ export default function FilterTransaction() {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleFilterOptionChange = (e) => {
+  const handleFilterOptionChange = (e:any) => {
     const selectedFilter = e.target.value;
     console.log(selectedFilter)
     const params = new URLSearchParams(searchParams);

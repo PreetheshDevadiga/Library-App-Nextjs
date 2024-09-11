@@ -7,13 +7,13 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import { fetchTransaction, fetchTransactionByStatus } from "../../../lib/action";
+import { fetchTransactionDetails, fetchTransactionByStatus, fetchTransaction } from "../../../lib/action";
 import { SearchBar } from "../../../components/home/search";
 import PaginationControls from "../../../components/home/pagination";
 import { DeleteTransaction } from "../../../components/admin/transactions/deleteTransaction";
 import { AproveTransactionButton } from "../../../components/admin/transactions/aproveTransaction"
 import { RejectRequestButton } from "../../../components/admin/transactions/rejectRequest";
-import FilterTransaction from "../../../components/admin/transactions/filterTransactions";
+import FilterTransaction from "@/components/admin/transactions/filterTransactions";
 
 async function TransactionTable({
   searchParams,
@@ -25,24 +25,22 @@ async function TransactionTable({
   };
 }) {
   const query: string = searchParams?.query || "";
-
+  const filterOption=searchParams?.filter || "All"
   const currentPage = Number(searchParams?.page) || 1;
   const limit = 6;
   const offset = (Number(currentPage) - 1) * limit;
-    const transactionResponse= await fetchTransaction(query,limit,offset);
-
-
+    const transactionResponse= await fetchTransactionByStatus(filterOption,query,limit,offset);
 
   const transactionList = transactionResponse?.items || [];
-  const totalTransactions = Number(transactionResponse?.pagination.total);
+  const totalTransactions =Number(transactionResponse?.pagination.total);
 
   return (
     <div className="container mx-auto">
       <div className="flex justify-between items-center mb-4">
         <SearchBar />
-        {/* <FilterTransaction /> */}
+        <FilterTransaction />
       </div>
-      <div className="rounded-md bg-white border">
+      <div className="rounded-md bg-white border shadow-md">
         <Table>
           <TableHeader>
             <TableRow>
@@ -60,9 +58,9 @@ async function TransactionTable({
               transactionList.map((transaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell className="font-medium">
-                    {transaction.bookId}
+                    {transaction.title}
                   </TableCell>
-                  <TableCell>{transaction.memberId}</TableCell>
+                  <TableCell>{transaction.firstName}</TableCell>
                   <TableCell>{transaction.borrowDate}</TableCell>
                   <TableCell>{transaction.dueDate}</TableCell>
                   <TableCell>{transaction.status}</TableCell>

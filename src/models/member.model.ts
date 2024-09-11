@@ -31,7 +31,7 @@ export const memberBaseSchema = z.object({
     .number()
     .min(1000000000, { message: "Phone number must be at least 10 digits" })
     .max(9999999999, { message: "Phone number cannot exceed 10 digits" })
-    .int(),
+    .int().nullable(),
   address: z
     .string()
     .trim()

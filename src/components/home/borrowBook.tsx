@@ -15,12 +15,13 @@ export default function BorrowBook({ memberId, bookId }: BorrowBookProps) {
   const { toast } = useToast()
 
   const handleBorrow = async () => {
- 
     try {
       const result = await requestBook(memberId, bookId)
+      console.log("result",result)
       if (result) {
+        console.log("inside result")
         toast({
-          title: "Process Completed",
+          title: "Borrowing Successful",
           description: "The book has been successfully borrowed.",
           duration: 2000,
           className: "bg-green-500 text-white",
@@ -29,6 +30,7 @@ export default function BorrowBook({ memberId, bookId }: BorrowBookProps) {
           router.push('/home')
         }, 2000)
       } else {
+        console.log("failed");
         throw new Error("Failed to borrow book")
       }
     } catch (error) {

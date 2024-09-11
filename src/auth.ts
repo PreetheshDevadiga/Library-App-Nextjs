@@ -7,6 +7,7 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { z } from "zod";
 import { authConfig } from "./auth.config";
+import { addNewMember, createUser, getUserByEmail } from "./lib/action";
 // async function getUser(email: string): Promise<User | undefined> {
 //   try {
 //     const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
@@ -24,11 +25,11 @@ function mapMemberToUser(member: IMember): User {
     id: String(member.id), // Convert id to string
     name: member.firstName,
     email: member.email,
+    role: member.role
   };
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  ...authConfig,
   providers: [
     Google,
     Credentials({
@@ -58,5 +59,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return null;
       },
     }),
+    
   ],
+  callbacks:{
+    ...authConfig.callbacks,
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        try {
+          if (user) {
+            const existingUser = await getUserByEmail(user.email!);
+            if (!existingUser) {
+              const result = await createUser({
+                firstName: user.name!,
+                lastName: "",
+                email: user.email!,
+                phone: null,
+                address: "",
+                password: user.id!,
+                role: "user",
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Error creating user:", error);
+          return false;
+        }
+      }
+      return true;
+    },
+  }
+ 
 });

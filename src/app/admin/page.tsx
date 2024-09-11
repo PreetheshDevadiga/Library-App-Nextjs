@@ -9,10 +9,10 @@ import {
 } from '../../components/ui/table'
 import { AddBook } from "../../components/home/addbook"
 import { EditBook } from "../../components/admin/books/editBook"
-import { fetchBooks } from "../../lib/action.ts"
+import { fetchBooks } from "../../lib/action"
 import { SearchBar } from "../../components/home/search"
 import PaginationControls from '../../components/home/pagination';
-import { DeleteBook } from '../../components/admin/books/deleteBook.tsx';
+import { DeleteBook } from '../../components/admin/books/deleteBook';
 
 async function BookTable({
   searchParams,

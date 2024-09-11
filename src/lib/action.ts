@@ -271,6 +271,23 @@ export async function deleteBook(id: number) {
 
 // Member Operation
 
+export async function getUserByEmail(email: string) {
+  try {
+    return await memberRepo.getByEmail(email);
+  } catch (err) {
+    return { message: (err as Error).message };
+  }
+}
+
+export async function createUser(memberData: IMemberBase) {
+  try {
+    const createdUser = await memberRepo.create(memberData);
+    return createdUser;
+  } catch (error) {
+    console.error("Failed to create user for google login", error);
+  }
+}
+
 export async function fetchMember(
   search: string,
   limit: number,
@@ -293,72 +310,72 @@ export async function fetchMember(
   }
 }
 
-
 export async function addNewMember(prevState: State, formData: FormData) {
-    const data = Object.fromEntries(formData.entries());
-  
-    const validateFields = memberBaseSchema.safeParse({
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      phone: Number(formData.get("phone")),
-      address: formData.get("address"),
-      role: formData.get("role"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
-  
-    if (!validateFields.success) {
-      console.log("Validation Failure");
-      return {
-        errors: validateFields.error.flatten().fieldErrors,
-        message: "Missing or invalid fields. Failed to register member.",
-      };
-    }
-  
-    const { firstName, lastName, phone, address, role, email, password } =
-      validateFields.data;
-  
-    if (
-      !firstName ||
-      !lastName ||
-      !phone ||
-      !address ||
-      !role ||
-      !email ||
-      !password
-    ) {
-      console.log("All fields are required");
-      return { message: "All fields are required" };
-    }
-  
-    try {
-      const existingMember = await memberRepo.getByEmail(email);
-  
-      if (existingMember) {
-        console.log("Member already exists.");
-        return { message: "Member already exists." };
-      }
-  
-      const newMember: IMemberBase = {
-        firstName,
-        lastName,
-        phone,
-        address,
-        role,
-        email,
-        password,
-      };
-  
-      const createdMember = await memberRepo.create(newMember);
-  
-      console.log(`Member ${createdMember.firstName} ${createdMember.lastName} created successfully!`);
-      return { message: "Success" };
-    } catch (error) {
-      console.log("Error during member registration:", error);
-      return { message: "Error during member registration.", error };
-    }
+  const data = Object.fromEntries(formData.entries());
+
+  const validateFields = memberBaseSchema.safeParse({
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    phone: Number(formData.get("phone")),
+    address: formData.get("address"),
+    role: formData.get("role"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  if (!validateFields.success) {
+    console.log("Validation Failure");
+    return {
+      errors: validateFields.error.flatten().fieldErrors,
+      message: "Missing or invalid fields. Failed to register member.",
+    };
   }
 
+  const { firstName, lastName, phone, address, role, email, password } =
+    validateFields.data;
+
+  if (
+    !firstName ||
+    !lastName ||
+    !phone ||
+    !address ||
+    !role ||
+    !email ||
+    !password
+  ) {
+    console.log("All fields are required");
+    return { message: "All fields are required" };
+  }
+
+  try {
+    const existingMember = await memberRepo.getByEmail(email);
+
+    if (existingMember) {
+      console.log("Member already exists.");
+      return { message: "Member already exists." };
+    }
+
+    const newMember: IMemberBase = {
+      firstName,
+      lastName,
+      phone,
+      address,
+      role,
+      email,
+      password,
+    };
+
+    const createdMember = await memberRepo.create(newMember);
+
+    console.log(
+      `Member ${createdMember.firstName} ${createdMember.lastName} created successfully!`
+    );
+    return { message: "Success" };
+  } catch (error) {
+    console.log("Error during member registration:", error);
+    return { message: "Error during member registration.", error };
+  }
+}
 
 // Transaction Operations
 export async function fetchTransaction(
@@ -396,10 +413,10 @@ export async function fetchTransactionByStatus(
       limit: limit,
       offset: offset,
     };
-    const transactions = await transactionRepo.listByStatus(filterOption, data);
+    const transactions = await transactionRepo.list(data,filterOption);
 
     if (transactions) {
-      console.log("Received transaction");
+      console.log("Received transaction",transactions);
       return transactions;
     } else {
       console.log("transaction not received");
@@ -482,7 +499,6 @@ export async function requestBook(memberId: number, bookId: number) {
     const data = { memberId: memberId, bookId: bookId };
 
     const borrowingBook = await transactionRepo.create(data);
-    console.log(borrowingBook);
     return borrowingBook;
   } catch (error) {
     console.error("Error finding details of book", error);
@@ -531,6 +547,7 @@ export async function fetchBorrowedBook() {
     const transactions = await db
       .select({
         id: TransactionTable.id,
+        bookId: BooksTable.id,
         title: BooksTable.title,
         author: BooksTable.author,
         borrowDate: TransactionTable.borrowDate,
@@ -552,32 +569,77 @@ export async function fetchBorrowedBook() {
   }
 }
 
-
 export async function fetchTransactionDetails(
   search: string,
   limit: number,
   offset: number
-): Promise<
-  { items: ITransaction[]; pagination: { offset: number; limit: number; total: number } } 
-  | { message: string }
-> {
+) {
   const params = {
     search: search,
     limit: limit,
     offset: offset,
   };
-
   try {
-    const transactions = await transactionRepo.listTransactionDetails(params);
+    const transactions = await db
+    .select({
+      id: TransactionTable.id,
+      title: BooksTable.title,
+      firstName: MemberTable.firstName,
+      borrowDate: TransactionTable.borrowDate,
+      dueDate:TransactionTable.dueDate,
+      status:TransactionTable.status,
+      returnDate:TransactionTable.returnDate
+    })
+    .from(TransactionTable)
+    .leftJoin(BooksTable, eq(TransactionTable.bookId, BooksTable.id))
+    .leftJoin(MemberTable, eq(TransactionTable.memberId, MemberTable.id));
 
-    if (transactions) {
-      console.log("transaction", transactions);
-      return transactions; 
+      if(transactions){
+        console.log("transaction",transactions);
+        return transactions;
+      }else{
+        console.error("error");
+      }
+  } catch (err) {
+    console.log("error");
+  }
+}
+
+export async function returnBook(bookId: number) {
+  const today = new Date();
+  const returnDate = today.toISOString().slice(0, 10);
+  try {
+    const currentMember = await fetchUserDetails();
+    if (!currentMember) {
+      throw new Error("User details not found");
+    }
+
+    const transactionId = await db
+      .select({ id: TransactionTable.id })
+      .from(TransactionTable)
+      .where(
+        and(
+          eq(TransactionTable.bookId, bookId),
+          eq(TransactionTable.memberId, currentMember.userDetails.id)
+        )
+      )
+      .execute();
+
+    if (transactionId.length === 0) {
+      throw new Error("Transaction not found");
+    }
+
+    const transaction = await transactionRepo.update(
+      transactionId[0].id,
+      returnDate
+    );
+
+    if (transaction) {
+      return transaction;
     } else {
       console.log("transaction not received");
-      return { message: "No transactions found" }; 
     }
-  } catch (err) {
-    return { message: (err as Error).message }; 
+  } catch (error) {
+    console.error("Failed to get the book details");
   }
 }

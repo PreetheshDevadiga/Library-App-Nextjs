@@ -14,6 +14,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useActionState } from "react";
 import { authenticate } from "@/lib/action";
+import { AlertCircle, BookOpen } from "lucide-react";
 
 export const LoginForm = ({ children }: { children: React.ReactNode }) => {
   const [errorMessage, formAction, isPending] = useActionState(
@@ -25,9 +26,12 @@ export const LoginForm = ({ children }: { children: React.ReactNode }) => {
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full flex justify-center py-20">
         <Card className="w-full max-w-md border rounded-lg shadow-md">
-          <CardHeader>
+          <CardHeader className="space-y-1">
+            <div className="flex items-center justify-center">
+              <BookOpen className="h-12 w-12 text-primary" />
+            </div>
             <CardTitle className="text-2xl font-bold text-center">
-              Log in to your account
+              Sign in to Bookshelf
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -51,10 +55,11 @@ export const LoginForm = ({ children }: { children: React.ReactNode }) => {
                     type="password"
                     required
                   />
-                  <div className="min-h-[1.25rem]"> 
+                  <div>
                     {errorMessage && (
-                      <p className="text-red-600 text-sm">
-                        {errorMessage || "Invalid username or password"}
+                      <p className="text-red-600 text-sm flex items-center">
+                        <AlertCircle className="h-4 w-4 mr-1" />
+                        {errorMessage}
                       </p>
                     )}
                   </div>
@@ -66,14 +71,7 @@ export const LoginForm = ({ children }: { children: React.ReactNode }) => {
                 >
                   Sign In
                 </Button>
-                <Link
-                  className="text-sm font-medium  text-primary underline-offset-4 transition-colors hover:underline"
-                  href="#"
-                >
-                  Forgot password?
-                </Link>
               </div>
-
               <div className="text-sm text-muted-foreground mt-3">
                 <span className="mr-1 hidden sm:inline-block">
                   Dont have an account?

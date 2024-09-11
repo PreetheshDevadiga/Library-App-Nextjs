@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "../../ui/button"
-import { User, Menu, ChevronDown} from "lucide-react";
+import { User, Menu, ChevronDown, BookOpen} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,11 +19,12 @@ export const AdminNavBar = ({ children }: { children: React.ReactNode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
   return (
-    <nav className="bg-white shadow-md  text-black p-4">
+    <nav className="bg-white shadow-md sticky top-0   text-black p-4 z-50">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-3xl font-bold">
-        BookShelf
-        </h1>
+      <div className="flex flex-row items-center gap-2">
+        <BookOpen className="h-8 w-8 text-primary" />
+        <h1 className="text-3xl font-bold">BookShelf</h1>
+        </div>
         <div className="flex flex-row justify-center items-center gap-8">
           <div className="hidden md:flex space-x-4">
             <Link className={clsx({

@@ -1,17 +1,30 @@
 "use client";
 
 import { Label } from "@radix-ui/react-label";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
 import { useActionState } from "react";
 import { addNewBook,State } from "../../../lib/action";
+import { toast } from "@/components/use-toast";
+import { useRouter } from "next/navigation";
 
 export function CreateBookForm() {
+  const router=useRouter();
   const initialState: State = { message: "", errors: {} };
   const [state, formAction] = useActionState(addNewBook, initialState);
-
+  useEffect(() => {
+    if (state.message === "Success") {
+      toast({
+        title: "Book Added Successfully",
+        description: "The book has been added to collection.",
+        className: "bg-green-500",
+        duration: 2000,
+      });
+      router.refresh();
+    }
+  }, [router, state.message]);
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="pb-4 md:pb-6">

@@ -7,7 +7,7 @@ import { Input } from "../../ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
 import { useActionState } from "react";
 import { updateBook,State } from "../../../lib/action";
-import { IBook } from "../../../models/book.model.ts"
+import { IBook } from "../../../models/book.model"
 import { useRouter } from "next/navigation";
 import { useToast } from "../../use-toast"
 
@@ -20,7 +20,6 @@ const updateBookById=updateBook.bind(null,book.id)
   const { toast } =useToast();
   useEffect(() => {
     if (state.message === "Success") {
-    //   router.push("/admin/books");
     toast({
         title: "Book Updated",
         description: "The book has been successfully updated.",
@@ -32,14 +31,14 @@ const updateBookById=updateBook.bind(null,book.id)
   }, [state, router, toast]);
   return (
     <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader className="pb-4 md:pb-6">
+      <CardHeader className="pb-2 md:pb-6">
         <CardTitle className="text-xl md:text-2xl font-bold text-center">
           Update New Book
         </CardTitle>
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-4 md:space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-2">
             <div className="space-y-2">
               <Label htmlFor="title" className="text-sm font-medium">
                 Title
@@ -54,6 +53,11 @@ const updateBookById=updateBook.bind(null,book.id)
                 className="w-full"
                 defaultValue={book.title}
               />
+               {state.errors?.title ? (
+                <p className="text-red-500 text-sm">{state.errors.title}</p>
+              ) : (
+                <div className="min-h-5"></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -69,6 +73,11 @@ const updateBookById=updateBook.bind(null,book.id)
                 defaultValue={book.author}
                 className="w-full"
               />
+              {state.errors?.author ? (
+                <p className="text-red-500 text-sm">{state.errors.author}</p>
+              ) : (
+                <div className="min-h-5"></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -84,6 +93,11 @@ const updateBookById=updateBook.bind(null,book.id)
                 defaultValue={book.publisher}
                 className="w-full"
               />
+              {state.errors?.publisher ? (
+                <p className="text-red-500 text-sm">{state.errors.publisher}</p>
+              ) : (
+                <div className="min-h-4"></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -99,6 +113,11 @@ const updateBookById=updateBook.bind(null,book.id)
                 defaultValue={book.genre}
                 className="w-full"
               />
+              {state.errors?.genre ? (
+                <p className="text-red-500 text-sm">{state.errors.genre}</p>
+              ) : (
+                <div className="min-h-4"></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -114,6 +133,11 @@ const updateBookById=updateBook.bind(null,book.id)
                 defaultValue={book.isbnNo}
                 className="w-full"
               />
+              {state.errors?.isbnNo ? (
+                <p className="text-red-500 text-sm">{state.errors.isbnNo}</p>
+              ) : (
+                <div className="min-h-4"></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -129,6 +153,11 @@ const updateBookById=updateBook.bind(null,book.id)
                 defaultValue={book.pages}
                 className="w-full"
               />
+              {state.errors?.pages ? (
+                <p className="text-red-500 text-sm">{state.errors.pages}</p>
+              ) : (
+                <div className="min-h-4"></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -144,6 +173,11 @@ const updateBookById=updateBook.bind(null,book.id)
                 defaultValue={book.totalCopies}
                 className="w-full"
               />
+              {state.errors?.totalCopies ? (
+                <p className="text-red-500 text-sm">{state.errors.totalCopies}</p>
+              ) : (
+                <div className="min-h-4"></div>
+              )}
             </div>
           </div>
 

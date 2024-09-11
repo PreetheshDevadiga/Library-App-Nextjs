@@ -7,9 +7,8 @@ import {
   TableBody,
   TableCell,
 } from "../../../components/ui/table";
-import { Button } from "../../../components/ui/button";
 import { fetchBorrowedBook } from "../../../lib/action";
-
+import { ReturnBookButton } from "@/components/home/returnBookButton"
 
 export default async function MyBooks() {
   let booksList;
@@ -55,9 +54,7 @@ export default async function MyBooks() {
                     {book.dueDate}
                 </TableCell>
                 <TableCell className="text-center">
-                  <Button variant="destructive" size="sm">
-                    Return
-                  </Button>
+                  <ReturnBookButton bookId={book.bookId} bookTitle={book.title} />
                 </TableCell>
               </TableRow>
             ))}

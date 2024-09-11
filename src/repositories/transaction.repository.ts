@@ -148,21 +148,38 @@ export class TransactionRepository
     }
   }
 
-  async list(params: IPageRequest): Promise<IPagedResponse<ITransaction>> {
+  async list(params: IPageRequest, status?: string){
     try {
-      const transactions = await this.db
-        .select()
+      const query = this.db
+        .select({
+          id: TransactionTable.id,
+          title: BooksTable.title,
+          firstName: MemberTable.firstName,
+          borrowDate: TransactionTable.borrowDate,
+          dueDate: TransactionTable.dueDate,
+          status: TransactionTable.status,
+          returnDate: TransactionTable.returnDate,
+        })
         .from(TransactionTable)
+        .leftJoin(BooksTable, eq(TransactionTable.bookId, BooksTable.id))
+        .leftJoin(MemberTable, eq(TransactionTable.memberId, MemberTable.id))
         .limit(params.limit)
         .offset(params.offset);
 
+      if (status && status !== "All") {
+        query.where(eq(TransactionTable.status, status));
+      }
+  
+      const transactions = await query;
+  
       const [totalTransactionRows] = await this.db
         .select({ count: count() })
         .from(TransactionTable);
-
+  
       const totalTransaction = totalTransactionRows.count;
+  
       return {
-        items: transactions as ITransaction[],
+        items: transactions,
         pagination: {
           offset: params.offset,
           limit: params.limit,
@@ -173,39 +190,39 @@ export class TransactionRepository
       throw new Error(`Listing Transactions failed: ${e.message}`);
     }
   }
+  
+  // async listByStatus(
+  //   status: string,
+  //   params: IPageRequest
+  // ): Promise<IPagedResponse<ITransaction>> {
+  //   try {
+  //     const transactions = await this.db
+  //       .select()
+  //       .from(TransactionTable)
+  //       .where(eq(TransactionTable.status, status))
+  //       .limit(params.limit)
+  //       .offset(params.offset);
 
-  async listByStatus(
-    status: string,
-    params: IPageRequest
-  ): Promise<IPagedResponse<ITransaction>> {
-    try {
-      const transactions = await this.db
-        .select()
-        .from(TransactionTable)
-        .where(eq(TransactionTable.status, status))
-        .limit(params.limit)
-        .offset(params.offset);
+  //     const [totalTransactionRows] = await this.db
+  //       .select({ count: count() })
+  //       .from(TransactionTable)
+  //       .where(eq(TransactionTable.status, status));
 
-      const [totalTransactionRows] = await this.db
-        .select({ count: count() })
-        .from(TransactionTable)
-        .where(eq(TransactionTable.status, status));
+  //     const totalTransaction = totalTransactionRows.count;
+  //     return {
+  //       items: transactions as ITransaction[],
+  //       pagination: {
+  //         offset: params.offset,
+  //         limit: params.limit,
+  //         total: totalTransaction,
+  //       },
+  //     };
+  //   } catch (e: any) {
+  //     throw new Error(`Listing Transactions by Status failed: ${e.message}`);
+  //   }
+  // }
 
-      const totalTransaction = totalTransactionRows.count;
-      return {
-        items: transactions as ITransaction[],
-        pagination: {
-          offset: params.offset,
-          limit: params.limit,
-          total: totalTransaction,
-        },
-      };
-    } catch (e: any) {
-      throw new Error(`Listing Transactions by Status failed: ${e.message}`);
-    }
-  }
-
-  async listTransactionDetails(params: IPageRequest){
+  async listTransactionDetails(params: IPageRequest): Promise<IPagedResponse<ITransaction>> {
     let searchWhereClause;
 
     if (params.search) {
