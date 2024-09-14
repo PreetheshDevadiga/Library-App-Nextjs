@@ -19,8 +19,6 @@ export const authConfig = {
   },
   callbacks: {
     jwt({ token, user }) {
-      console.log("JWT Token User: ", user);
-      console.log("JWT Token: ", token);
       if (user) {
         const userData = {
           id: user?.id,
@@ -36,7 +34,6 @@ export const authConfig = {
       if (token) {
         session.user = token;
       }
-      console.log("Session: ", session);
       return session;
     },
     authorized({ auth, request: { nextUrl } }) {

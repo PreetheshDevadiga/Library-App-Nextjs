@@ -24,8 +24,7 @@ export class MemberRepository implements IRepository<IMemberBase, IMember> {
         .select()
         .from(MemberTable)
         .where(eq(MemberTable.id, result.id));
-      // const insertedMember = await this.getById(queryResult.inserted);
-
+  
       if (!insertedMember) {
         throw new Error("Failed to retrieve the newly inserted member");
       }

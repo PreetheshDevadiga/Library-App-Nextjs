@@ -1,6 +1,6 @@
 "use server";
 
-import { IMemberBase, memberBaseSchema } from "@/models/member.model";
+import { IMember, IMemberBase, memberBaseSchema } from "@/models/member.model";
 import { BookRepository } from "@/repositories/book.repository";
 import { MemberRepository } from "@/repositories/member.repository";
 import { TransactionRepository } from "@/repositories/transaction.repository";
@@ -9,12 +9,8 @@ import { AuthError } from "next-auth";
 import { auth, signIn } from "../auth";
 import { db } from "./db";
 import { bookBaseSchema, IBookBase } from "@/models/book.model";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { BooksTable, MemberTable, TransactionTable } from "@/drizzle/schema";
-import { eq, and, ne, ilike, like } from "drizzle-orm";
-import { IPageRequest } from "@/repositories/pagination.response";
-import { ITransaction } from "@/models/transaction.model";
+import { eq, and, ne } from "drizzle-orm";
 
 const memberRepo = new MemberRepository(db);
 const bookRepo = new BookRepository(db);
@@ -331,6 +327,8 @@ export async function addNewMember(prevState: State, formData: FormData) {
     };
   }
 
+  
+
   const { firstName, lastName, phone, address, role, email, password } =
     validateFields.data;
 
@@ -352,8 +350,10 @@ export async function addNewMember(prevState: State, formData: FormData) {
 
     if (existingMember) {
       console.log("Member already exists.");
-      return { message: "Member already exists." };
+      return { message: "Member already exists. Try SignIn" };
     }
+
+    const hashedPwd = await bcrypt.hash(password, 10);
 
     const newMember: IMemberBase = {
       firstName,
@@ -362,7 +362,7 @@ export async function addNewMember(prevState: State, formData: FormData) {
       address,
       role,
       email,
-      password,
+      password: hashedPwd,
     };
 
     const createdMember = await memberRepo.create(newMember);
@@ -371,9 +371,14 @@ export async function addNewMember(prevState: State, formData: FormData) {
       `Member ${createdMember.firstName} ${createdMember.lastName} created successfully!`
     );
     return { message: "Success" };
-  } catch (error) {
-    console.log("Error during member registration:", error);
-    return { message: "Error during member registration.", error };
+  } catch (error:any) {
+    if (error.message.includes("Duplicate entry") && error.message.includes("phone")) {
+      return { message: "A member with this phone number already exists." };
+    } else if(error.message.includes("Duplicate entry") && error.message.includes("email")) {
+      return { message: "A member with this email address already exists." };
+    }
+
+    return { message: "Error during member registration.", error: error.message };
   }
 }
 
@@ -397,6 +402,7 @@ export async function fetchTransaction(
       console.log("transaction not received");
     }
   } catch (error) {
+    
     console.error("Error handling transaction request:", error);
   }
 }
@@ -416,7 +422,6 @@ export async function fetchTransactionByStatus(
     const transactions = await transactionRepo.list(data,filterOption);
 
     if (transactions) {
-      console.log("Received transaction",transactions);
       return transactions;
     } else {
       console.log("transaction not received");
@@ -484,7 +489,7 @@ export async function fetchUserDetails() {
   const user = session?.user;
   const email = user?.email;
   try {
-    const userDetails = await memberRepo.getByEmail(email as string);
+    const userDetails:IMember|null = await memberRepo.getByEmail(email as string);
     if (!userDetails) {
       throw new Error("Details could not be found");
     }

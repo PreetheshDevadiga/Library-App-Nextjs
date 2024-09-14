@@ -36,14 +36,14 @@ async function TransactionTable({
 
   return (
     <div className="container mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <SearchBar />
+      <div className="flex justify-end items-center mb-4">
         <FilterTransaction />
       </div>
       <div className="rounded-md bg-white border shadow-md">
         <Table>
           <TableHeader>
             <TableRow>
+            <TableHead>Transaction ID</TableHead>
               <TableHead className="w-[150px]">Book Name</TableHead>
               <TableHead>Member Name</TableHead>
               <TableHead>Borrow Date</TableHead>
@@ -57,6 +57,7 @@ async function TransactionTable({
             {totalTransactions > 0 ? (
               transactionList.map((transaction) => (
                 <TableRow key={transaction.id}>
+                  <TableCell className="text-center">{transaction.id}</TableCell>
                   <TableCell className="font-medium">
                     {transaction.title}
                   </TableCell>
@@ -67,8 +68,8 @@ async function TransactionTable({
                   <TableCell>{transaction.returnDate}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-center space-x-2">
-                    <AproveTransactionButton transaction={transaction}/>
-                    <RejectRequestButton transaction={transaction}/>
+                    <AproveTransactionButton transaction={transaction} bookTitle={transaction.title}/>
+                    <RejectRequestButton transaction={transaction} bookTitle={transaction.title}/>
                       <DeleteTransaction
                         transactionId={Number(transaction.id)}
                         />

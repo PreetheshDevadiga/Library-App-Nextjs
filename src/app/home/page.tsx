@@ -41,6 +41,7 @@ async function HomePage({
               title={book.title}
               author={book.author}
               availableCopies={book.availableCopies}
+              totalCopies={book.totalCopies}
             />
           ))
         ) : (

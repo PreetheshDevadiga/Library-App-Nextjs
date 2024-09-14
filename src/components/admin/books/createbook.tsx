@@ -22,7 +22,7 @@ export function CreateBookForm() {
         className: "bg-green-500",
         duration: 2000,
       });
-      router.refresh();
+      router.push('/admin/books');
     }
   }, [router, state.message]);
   return (

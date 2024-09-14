@@ -7,11 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from '../../../components/ui/table'
-import { fetchMember } from "../../../lib/action.ts"
+import { fetchMember } from "../../../lib/action"
 import { SearchBar } from "../../../components/home/search"
 import PaginationControls from '../../../components/home/pagination';
 import { DeleteMember } from '../../../components/admin/members/deleteMember';
-import { AddMember } from '../../../components/admin/members/addMember.tsx';
+import { AddMember } from '../../../components/admin/members/addMember';
 
 async function MemberTable({
   searchParams,
@@ -32,8 +32,8 @@ async function MemberTable({
 
   return (
     <div className="container mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <SearchBar />
+      <div className="flex justify-end items-center mb-4">
+
         <AddMember />
       </div>
       <div className="rounded-md bg-white border">

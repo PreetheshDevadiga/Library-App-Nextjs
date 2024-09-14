@@ -172,11 +172,16 @@ export class TransactionRepository
   
       const transactions = await query;
   
-      const [totalTransactionRows] = await this.db
-        .select({ count: count() })
-        .from(TransactionTable);
-  
-      const totalTransaction = totalTransactionRows.count;
+      const countQuery = this.db
+      .select({ count: count() })
+      .from(TransactionTable);
+
+      if (status && status !== "All") {
+        countQuery.where(eq(TransactionTable.status, status));
+      }
+
+      const [totalTransactionRows] = await countQuery;
+    const totalTransaction = totalTransactionRows.count;
   
       return {
         items: transactions,

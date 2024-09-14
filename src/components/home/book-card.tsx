@@ -9,13 +9,13 @@ interface BookCardProps {
     title: string
     author: string
     availableCopies: number
+    totalCopies:number
   }
 
 
-const BookCard = ({ memberId,bookId,title, author, availableCopies }:BookCardProps) => {
+const BookCard = ({ memberId,bookId,title, author, availableCopies,totalCopies }:BookCardProps) => {
  
   return (
-
     <Card className="w-full max-w-md p-6 grid gap-6">
     <div className="flex items-center  gap-4">
     {/* <Image
@@ -31,7 +31,7 @@ const BookCard = ({ memberId,bookId,title, author, availableCopies }:BookCardPro
         <div className="text-muted-foreground">
           <span className="font-medium">{author}</span>
         </div>
-        <div className="text-sm text-muted-foreground">Available Copies: {availableCopies}</div>
+        <div className="text-sm text-muted-foreground">Available Copies: {availableCopies}/{totalCopies}</div>
       </div>
     </div>
     <div className="flex justify-end">
