@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate": "drizzle-kit generate",
+    "drop":"drizzle-kit drop",
+    "migrate": "ts-node ./src/drizzle/migrate.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
@@ -42,6 +45,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "drizzle-kit": "^0.24.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.6",
     "postcss": "^8",

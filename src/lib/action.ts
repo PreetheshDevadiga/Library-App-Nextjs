@@ -12,7 +12,9 @@ import { bookBaseSchema, IBookBase } from "@/models/book.model";
 import { BooksTable, MemberTable, TransactionTable } from "@/drizzle/schema";
 import { eq, and, ne } from "drizzle-orm";
 
+
 const memberRepo = new MemberRepository(db);
+
 const bookRepo = new BookRepository(db);
 const transactionRepo = new TransactionRepository(db);
 

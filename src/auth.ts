@@ -40,7 +40,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          console.log("Validation success");
           const { email, password } = parsedCredentials.data;
           const user = await memberRepo.getByEmail(email);
           if (!user) return null;
