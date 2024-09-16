@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -9,26 +9,38 @@ import {
   TableHeader,
   TableRow,
 } from '../../../components/ui/table';
-import { EditBook } from "./editBook";
-import { DeleteBook } from "./deleteBook";
+import { EditBook } from './editBook';
+import { DeleteBook } from './deleteBook';
 import { IBook } from '@/models/book.model';
 
 type BooksTableProps = {
-     booksList:IBook[], totalBooks:number, query:string
-}
+  booksList: IBook[];
+  totalBooks: number;
+  query: string;
+};
 
-const BooksTable = ({ booksList, totalBooks, query }:BooksTableProps) => {
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [sortedBooks, setSortedBooks] = useState(booksList);
+type SortOrder = 'asc' | 'desc';
+type SortColumn = 'title' | 'author';
 
-  const handleSortByTitle = () => {
+const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [sortColumn, setSortColumn] = useState<SortColumn>('title');
+  const [sortedBooks, setSortedBooks] = useState<IBook[]>(booksList);
+
+  useEffect(() => {
+    setSortedBooks(booksList);
+  }, [booksList]);
+
+
+  const handleSort = (column: SortColumn) => {
     const sorted = [...sortedBooks].sort((a, b) => {
-      const comparison = a.title.localeCompare(b.title);
+      const comparison = a[column].localeCompare(b[column]);
       return sortOrder === 'asc' ? comparison : -comparison;
     });
 
     setSortedBooks(sorted);
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    setSortColumn(column);
   };
 
   return (
@@ -36,10 +48,18 @@ const BooksTable = ({ booksList, totalBooks, query }:BooksTableProps) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[150px] cursor-pointer" onClick={handleSortByTitle}>
-              Title {sortOrder === 'asc' ? '↑' : '↓'}
+            <TableHead
+              className="w-[150px] cursor-pointer"
+              onClick={() => handleSort('title')}
+            >
+              Title {sortColumn === 'title' && (sortOrder === 'asc' ? '↑' : '↓')}
             </TableHead>
-            <TableHead>Author</TableHead>
+            <TableHead
+              className="cursor-pointer"
+              onClick={() => handleSort('author')}
+            >
+              Author {sortColumn === 'author' && (sortOrder === 'asc' ? '↑' : '↓')}
+            </TableHead>
             <TableHead>Publisher</TableHead>
             <TableHead>ISBN</TableHead>
             <TableHead>Pages</TableHead>

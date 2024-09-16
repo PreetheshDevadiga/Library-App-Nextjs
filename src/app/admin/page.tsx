@@ -16,7 +16,6 @@ async function BookTable({
   const currentPage = Number(searchParams?.page) || 1;
   const limit = 6;
   const offset = (Number(currentPage) - 1) * limit;
-
   const booksResponse = await fetchBooks(query, limit, offset);
   const booksList = booksResponse?.items || [];
   const totalBooks = Number(booksResponse?.pagination.total);

@@ -11,42 +11,38 @@ interface BorrowBookProps {
 }
 
 export default function BorrowBook({ memberId, bookId }: BorrowBookProps) {
-  const router = useRouter()
-  const { toast } = useToast()
+  const router = useRouter();
+  const { toast } = useToast();
 
   const handleBorrow = async () => {
     try {
-      const result = await requestBook(memberId, bookId)
-      console.log("result",result)
+      const result = await requestBook(memberId, bookId);
       if (result) {
-        console.log("inside result")
         toast({
           title: "Borrowing Successful",
           description: "The book has been successfully borrowed.",
           duration: 2000,
           className: "bg-green-500 text-white",
-        })
+        });
         setTimeout(() => {
-          router.push('/home')
-        }, 2000)
+          router.push("/home");
+        }, 2000);
       } else {
-        console.log("failed");
-        throw new Error("Failed to borrow book")
+        throw new Error("Failed to borrow book");
       }
     } catch (error) {
-      console.error("Failed to borrow the book:", error)
+      console.error("Failed to borrow the book:", error);
       toast({
         title: "Error",
         description: "Failed to borrow the book. Please try again.",
         variant: "destructive",
         duration: 2000,
-      })
-    } 
-  }
+      });
+    }
+  };
 
   return (
-    <Button onClick={handleBorrow}>
-      Borrow
-    </Button>
-  )
+      <Button onClick={handleBorrow}>Borrow</Button>
+
+  );
 }
