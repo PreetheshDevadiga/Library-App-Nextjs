@@ -9,6 +9,7 @@ import { useActionState } from "react";
 import { addNewBook,State } from "../../../lib/action";
 import { toast } from "@/components/use-toast";
 import { useRouter } from "next/navigation";
+import { Suspense } from 'react'
 
 export function CreateBookForm() {
   const router=useRouter();
@@ -25,6 +26,7 @@ export function CreateBookForm() {
       router.push('/admin/books');
     }
   }, [router, state.message]);
+  
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="pb-4 md:pb-6">

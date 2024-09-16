@@ -6,12 +6,10 @@ services:
     container_name: lms_pmas
     restart: unless-stopped
     environment:
-      PMA_HOST: library-database-main.cx8gqq4i0gvf.ap-south-1.rds.amazonaws.com
+      PMA_HOST: library-database.cx8gqq4i0gvf.ap-south-1.rds.amazonaws.com
       PMA_PORT: 3306
       PMA_USER: admin
       PMA_PASSWORD: Preethu1013
       # PMA_ARBITRARY: 1
     ports:
       - 8081:80
-volumes:
-  dbdata:

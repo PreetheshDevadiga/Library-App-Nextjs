@@ -14,7 +14,7 @@ import { IMember } from "../../models/member.model";
 export default async function UserProfile() {
   const userProfileDetails = await fetchUserDetails();
 
-  const userRegisteredWithCredentials: IMember | null =
+  const userRegisteredWithCredentials: IMember | undefined =
     userProfileDetails?.userDetails;
   const userRegisteredWithGoogle = userProfileDetails?.user;
   const userImage = userProfileDetails?.user?.image;
