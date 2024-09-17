@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card
 import React, { useEffect ,useActionState} from "react"
 import {registerUser, State} from '@/lib/action'
 import { useRouter } from "next/navigation";
+import { AlertCircle } from "lucide-react";
 
 const RegisterForm= (({children}:{children:React.ReactNode})=>{
 
@@ -57,12 +58,16 @@ const RegisterForm= (({children}:{children:React.ReactNode})=>{
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input id="confirmPassword" name ="confirmPassword" required type="password" />
               </div>
-              
+
+              {state.message && state.message !== "Success" && (
+                 <p className="text-red-600 text-sm flex items-center">
+                 <AlertCircle className="h-4 w-4 mr-1" />
+                 {state.message}
+               </p>
+              )}
               <Button className="w-full rounded-md focus:outline-none focus:ring-2" type="submit">
                 Sign Up
-              </Button>
-              
-    
+              </Button> 
             </div>
 
           </form>

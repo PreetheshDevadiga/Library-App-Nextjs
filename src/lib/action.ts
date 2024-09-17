@@ -53,7 +53,7 @@ export async function authenticate(
 
 export async function registerUser(prevState: State, formData: FormData) {
   const data = Object.fromEntries(formData.entries());
-
+console.log(data);
   const validateFields = memberBaseSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -97,6 +97,9 @@ export async function registerUser(prevState: State, formData: FormData) {
       password: hashedPwd,
     };
 
+    if(password!==data.confirmPassword){
+      return { message: "Passwords do not match" };
+    }
     const createdUser = await memberRepo.create(newUser);
 
     console.log(`User ${createdUser.email} created successfully!`);

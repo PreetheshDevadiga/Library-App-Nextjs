@@ -14,7 +14,7 @@ async function HomePage({
 }){
   const query: string = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
-  const limit = 6;
+  const limit = 8;
   const offset = (Number(currentPage) - 1) * limit;
 
   const booksResponse = await fetchBooks(query,limit,offset);
@@ -31,17 +31,17 @@ async function HomePage({
             <SearchBar />
             
           </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
     {totalBooks! > 0 ? (
           booksList!.map((book) => (
             <BookCard
               key={book.id}
-              memberId={memberId!}
-              bookId={book.id}
+              // memberId={memberId!}
+              // bookId={book.id}
               title={book.title}
               author={book.author}
-              availableCopies={book.availableCopies}
-              totalCopies={book.totalCopies}
+              // availableCopies={book.availableCopies}
+              // totalCopies={book.totalCopies}
             />
           ))
         ) : (
