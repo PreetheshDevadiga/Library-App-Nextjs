@@ -12,6 +12,7 @@ import {
 import { EditBook } from './editBook';
 import { DeleteBook } from './deleteBook';
 import { IBook } from '@/models/book.model';
+import { usePathname, useSearchParams,useRouter } from 'next/navigation';
 
 type BooksTableProps = {
   booksList: IBook[];
@@ -23,22 +24,23 @@ type SortOrder = 'asc' | 'desc';
 type SortColumn = 'title' | 'author';
 
 const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
+  const searchParams= useSearchParams();
+  const pathname=usePathname();
+  const params = new URLSearchParams(searchParams);
+  const { replace } = useRouter();
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [sortColumn, setSortColumn] = useState<SortColumn>('title');
-  const [sortedBooks, setSortedBooks] = useState<IBook[]>(booksList);
 
-  useEffect(() => {
-    setSortedBooks(booksList);
-  }, [booksList]);
-
-
-  const handleSort = (column: SortColumn) => {
-    const sorted = [...sortedBooks].sort((a, b) => {
-      const comparison = a[column].localeCompare(b[column]);
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
-
-    setSortedBooks(sorted);
+  const handleSort = (column: SortColumn) => { 
+    if (column) {
+      params.set('sortBy', column);
+      params.set('orderBy',sortOrder)
+    } else {
+      params.delete('sortBy');
+      params.delete('orderBy');
+    }
+    replace(`${pathname}?${params.toString()}`);
+    
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     setSortColumn(column);
   };
@@ -71,7 +73,7 @@ const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
         </TableHeader>
         <TableBody>
           {totalBooks > 0 ? (
-            sortedBooks.map((book) => (
+            booksList.map((book) => (
               <TableRow key={book.id}>
                 <TableCell className="font-medium">{book.title}</TableCell>
                 <TableCell>{book.author}</TableCell>
@@ -101,5 +103,6 @@ const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
     </div>
   );
 };
+
 
 export default BooksTable;

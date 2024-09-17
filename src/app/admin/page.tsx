@@ -10,13 +10,19 @@ async function BookTable({
   searchParams?: {
     query?: string;
     page?: string;
+    sortBy?:string;
+    orderBy?:string;
   };
 }) {
+
   const query: string = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const limit = 6;
   const offset = (Number(currentPage) - 1) * limit;
-  const booksResponse = await fetchBooks(query, limit, offset);
+  const sortBy=searchParams?.sortBy || "title";
+  const orderBy=searchParams?.orderBy || "asc";
+  
+  const booksResponse = await fetchBooks(query, limit, offset,sortBy,orderBy);
   const booksList = booksResponse?.items || [];
   const totalBooks = Number(booksResponse?.pagination.total);
 
@@ -29,7 +35,9 @@ async function BookTable({
       {totalBooks > 0 && (
         <div className="mt-4">
           <PaginationControls totalBooks={totalBooks} limit={limit} />
+          
         </div>
+        
       )}
     </div>
   );

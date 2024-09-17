@@ -73,11 +73,9 @@ export const LoginForm = ({ children }: { children: React.ReactNode }) => {
                 </Button>
               </div>
               <div className="text-sm text-muted-foreground mt-3">
-                <span className="mr-1 hidden sm:inline-block">
-                  Dont have an account?
-                </span>
+                <span className="mr-1">Don&apos;t have an account?</span>
                 <Link
-                  className="text-primary underline-offset-4 transition-colors hover:underline"
+                  className="text-primary underline-offset-4 transition-colors underline hover:underline"
                   href="/signup"
                 >
                   Sign up

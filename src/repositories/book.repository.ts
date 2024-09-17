@@ -1,11 +1,12 @@
 import "dotenv/config";
-import { count, eq, like, or } from "drizzle-orm";
+import { asc, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { IPageRequest, IPagedResponse } from "./pagination.response";
 import { IRepository } from "./repository";
 
 import { IBook, IBookBase } from "@/models/book.model";
 import { BooksTable } from "../drizzle/schema";
+
 
 export class BookRepository implements IRepository<IBookBase, IBook> {
   constructor(private readonly db: MySql2Database<Record<string, unknown>>) {}
@@ -101,6 +102,8 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
 
   async list(params: IPageRequest): Promise<IPagedResponse<IBook>> {
     try {
+      const sortBy=params.sortBy;
+      const orderBy=params.orderBy;
       const search = params.search?.toLowerCase();
       const whereExpression = search
         ? or(
@@ -109,10 +112,26 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
           )
         : undefined;
 
+        let sortingOrder=sql``
+        if (sortBy && orderBy && ['asc', 'desc'].includes(orderBy)){
+         sortingOrder = orderBy==="asc" ? asc(BooksTable[sortBy as keyof IBook]) : desc(BooksTable[sortBy as keyof IBook])
+        }
+
+        const query = this.db
+  .select()
+  .from(BooksTable)
+  .where(whereExpression)
+  .orderBy(sortingOrder)
+  .limit(params.limit)
+  .offset(params.offset);
+
+// Log the generated SQL query
+console.log('Generated SQL Query:', query.toSQL());
+
       const books = await this.db
         .select()
         .from(BooksTable)
-        .where(whereExpression)
+        .where(whereExpression).orderBy(sortingOrder)
         .limit(params.limit)
         .offset(params.offset)
         .execute();

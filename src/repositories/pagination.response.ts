@@ -11,4 +11,7 @@ export interface IPageRequest {
   search?: string;
   offset: number;
   limit: number;
+  sortBy?:string;
+  orderBy?:string;
+  
 }

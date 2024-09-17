@@ -113,13 +113,18 @@ console.log(data);
 export async function fetchBooks(
   search: string,
   limit: number,
-  offset: number
+  offset: number,
+  sortBy:string,
+  orderBy:string,
 ) {
   try {
+    
     const books = await bookRepo.list({
       search: search,
       limit: limit,
       offset: offset,
+      sortBy:sortBy,
+      orderBy:orderBy,
     });
     if (books) {
       console.log("Received books");
@@ -399,7 +404,7 @@ export async function addNewMember(prevState: State, formData: FormData) {
 export async function fetchTransaction(
   search: string,
   limit: number,
-  offset: number
+  offset: number,
 ) {
   try {
     const transactions = await transactionRepo.list({
