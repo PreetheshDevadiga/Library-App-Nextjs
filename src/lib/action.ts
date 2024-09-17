@@ -11,6 +11,7 @@ import { db } from "./db";
 import { bookBaseSchema, IBookBase } from "@/models/book.model";
 import { BooksTable, MemberTable, TransactionTable } from "@/drizzle/schema";
 import { eq, and, ne } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 
 const memberRepo = new MemberRepository(db);
@@ -29,7 +30,14 @@ export async function authenticate(
 ) {
   try {
     console.log("Success");
-    await signIn("credentials", formData);
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: formData.get("email"),
+      password: formData.get("password")
+    });
+    if(result){
+      redirect("/home")
+    }
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

@@ -42,14 +42,14 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const user = auth?.user;
 
-      // const paths = nextUrl.pathname;
+      const paths = nextUrl.pathname;
 
-      // const publicPaths = ["/", "/signup", "/login"]; 
-      // const isPublicPath = publicPaths.includes(paths);
+      const publicPaths = ["/", "/signup", "/login"]; 
+      const isPublicPath = publicPaths.includes(paths);
 
-      // if (isPublicPath) {
-      //   return true; 
-      // }
+      if (isPublicPath) {
+        return true; 
+      }
 
       if (!user) {
         return false;
