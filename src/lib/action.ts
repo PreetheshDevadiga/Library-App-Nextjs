@@ -114,8 +114,8 @@ export async function fetchBooks(
   search: string,
   limit: number,
   offset: number,
-  sortBy:string,
-  orderBy:string,
+  sortBy?:string,
+  orderBy?:string,
 ) {
   try {
     
