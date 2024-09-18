@@ -98,7 +98,7 @@ async function HomePage({
                     </div>
                     <Separator className="my-4" />
                     <DialogFooter>
-                    <p className="text-xl font-semibold text-gray-900">₹{book.price}</p>
+                    <p className="text-xl font-semibold text-gray-900">₹768</p>
                       <BorrowBook bookId={book.id} memberId={memberId as number} />
                     </DialogFooter>
                   </div>
