@@ -4,9 +4,10 @@ import { MemberTable } from "../drizzle/schema";
 import { IMember, IMemberBase } from "../models/member.model";
 import { IPageRequest, IPagedResponse } from "./pagination.response";
 import { IRepository } from "./repository";
+import { VercelPgDatabase } from "drizzle-orm/vercel-postgres";
 
 export class MemberRepository implements IRepository<IMemberBase, IMember> {
-  constructor(private readonly db: MySql2Database<Record<string, unknown>>) {}
+  constructor(private readonly db: VercelPgDatabase<Record<string, unknown>>) {}
 
   async create(memberData: IMemberBase): Promise<IMember> {
     try {
@@ -18,7 +19,7 @@ export class MemberRepository implements IRepository<IMemberBase, IMember> {
       const [result] = await this.db
         .insert(MemberTable)
         .values(newMember)
-        .$returningId();
+        .returning({id:MemberTable.id});
 
       const [insertedMember] = await this.db
         .select()

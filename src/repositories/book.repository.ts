@@ -3,13 +3,14 @@ import { asc, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { IPageRequest, IPagedResponse } from "./pagination.response";
 import { IRepository } from "./repository";
+import { VercelPgDatabase } from "drizzle-orm/vercel-postgres";
 
 import { IBook, IBookBase } from "@/models/book.model";
 import { BooksTable } from "../drizzle/schema";
 
 
 export class BookRepository implements IRepository<IBookBase, IBook> {
-  constructor(private readonly db: MySql2Database<Record<string, unknown>>) {}
+  constructor(private readonly db: VercelPgDatabase<Record<string, unknown>>) {}
 
   async create(data: IBookBase): Promise<IBook> {
     try {
@@ -20,7 +21,7 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
       const [queryResult] = await this.db
         .insert(BooksTable)
         .values(newBookdata)
-        .$returningId();
+        .returning({id:BooksTable.id});
       const [insertedBook] = await this.db
         .select()
         .from(BooksTable)
@@ -147,10 +148,12 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
 
   async getByISBN(isbn: string): Promise<IBook | null> {
     try {
+      console.log("imm herree")
       const [result] = await this.db
         .select()
         .from(BooksTable)
         .where(eq(BooksTable.isbnNo, isbn));
+        console.log(result);
       return (result as IBook) || null;
     } catch (e: any) {
       throw new Error(`Selection failed: ${e.message}`);

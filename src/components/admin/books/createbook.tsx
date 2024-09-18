@@ -1,20 +1,40 @@
 "use client";
 
 import { Label } from "@radix-ui/react-label";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
 import { useActionState } from "react";
-import { addNewBook,State } from "../../../lib/action";
+import { addNewBook,State, uploadImage } from "../../../lib/action";
 import { toast } from "@/components/use-toast";
 import { useRouter } from "next/navigation";
 import { Suspense } from 'react'
+import { error } from "console";
 
 export function CreateBookForm() {
   const router=useRouter();
   const initialState: State = { message: "", errors: {} };
   const [state, formAction] = useActionState(addNewBook, initialState);
+  const [imageURL, setImageURL] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setIsUploading(true);
+      const result = await uploadImage(file);
+      setIsUploading(false);
+      if (result.imageURL) {
+        console.log("imahe",result.imageURL)
+        setImageURL(result.imageURL);
+      } else if (result.error) {
+        throw new Error(result.error);
+       
+      }
+    }
+  };
+
   useEffect(() => {
     if (state.message === "Success") {
       toast({
@@ -145,10 +165,12 @@ export function CreateBookForm() {
                 name="bookImage"
                 type="file"
                 accept="image/*"
-                // onChange={handleImageChange}
+                onChange={handleImageUpload}
                 required
                 className="w-full"
               />
+              {isUploading && <p>Uploading image...</p>}
+              <input type="hidden" name="imageURL" value={imageURL} />
             </div>
 
           </div>

@@ -1,26 +1,30 @@
+import { drizzle } from 'drizzle-orm/vercel-postgres';
 import {
   bigint,
-  float,
-  int,
-  mysqlTable,
+  integer,
   serial,
   varchar,
-} from "drizzle-orm/mysql-core";
+  pgTable,
+} from "drizzle-orm/pg-core";
 
-export const BooksTable = mysqlTable("books", {
+// Books Table
+export const BooksTable = pgTable("books", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 100 }).notNull(),
   author: varchar("author", { length: 150 }).notNull(),
   publisher: varchar("publisher", { length: 100 }).notNull(),
   genre: varchar("genre", { length: 31 }).notNull(),
   isbnNo: varchar("isbnNo", { length: 13 }).notNull(),
-  pages: int("pages").notNull(),
-  totalCopies: int("totalCopies").notNull(),
-  availableCopies: int("availableCopies").notNull(),
+  pages: integer("pages").notNull(),
+  totalCopies: integer("totalCopies").notNull(),
+  availableCopies: integer("availableCopies").notNull(),
+  price: integer("price"),
+  imageUrl: varchar("imageUrl", { length: 255 })
 });
 
-export const MemberTable = mysqlTable("members", {
-  id: serial("id").primaryKey().autoincrement(),
+// Members Table
+export const MemberTable = pgTable("members", {
+  id: serial("id").primaryKey(),
   firstName: varchar("firstName", { length: 50 }).notNull(),
   lastName: varchar("lastName", { length: 50 }).notNull(),
   phone: bigint("phone", { mode: "number" }).unique(),
@@ -31,15 +35,16 @@ export const MemberTable = mysqlTable("members", {
   refreshToken: varchar("refreshToken", { length: 100 }).unique(),
 });
 
-export const TransactionTable = mysqlTable("transactions", {
-  id: serial("id").primaryKey().autoincrement(),
-  bookId: int("bookId")
+// Transactions Table
+export const TransactionTable = pgTable("transactions", {
+  id: serial("id").primaryKey(),
+  bookId: integer("bookId")
     .notNull()
     .references(() => BooksTable.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  memberId: int("memberId")
+  memberId: integer("memberId")
     .notNull()
     .references(() => MemberTable.id, {
       onDelete: "cascade",

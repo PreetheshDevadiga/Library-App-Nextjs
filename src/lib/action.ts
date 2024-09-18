@@ -8,11 +8,17 @@ import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
 import { auth, signIn } from "../auth";
 import { db } from "./db";
-import { bookBaseSchema, IBookBase } from "@/models/book.model";
+import { bookBaseSchema, IBookBase, newBookBaseSchema } from "@/models/book.model";
 import { BooksTable, MemberTable, TransactionTable } from "@/drizzle/schema";
 import { eq, and, ne } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { v2 as cloudinary } from "cloudinary";
 
+cloudinary.config({
+  cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:process.env.CLOUDINARY_API_KEY,
+  api_secret:process.env.CLOUDINARY_API_SECRET,
+})
 
 const memberRepo = new MemberRepository(db);
 
@@ -22,6 +28,44 @@ const transactionRepo = new TransactionRepository(db);
 export interface State {
   errors?: { [key: string]: string[] };
   message?: string;
+}
+
+export async function uploadImage(file: File) {
+  if (!file) return { imageURL: "" };
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "BookCoverPages" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+
+      const reader = file.stream().getReader();
+      const pump = async () => {
+        const { done, value } = await reader.read();
+        if (done) {
+          uploadStream.end();
+        } else {
+          uploadStream.write(value);
+          pump();
+        }
+      };
+      pump();
+    });
+
+    if (result && typeof result === "object" && "secure_url" in result) {
+      console.log(result.secure_url);
+      return { imageURL: result.secure_url as string };
+    }
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    return { error: "Failed to upload image. Please try again." };
+  }
+
+  return { imageURL: "" };
 }
 
 export async function authenticate(
@@ -116,7 +160,7 @@ export async function fetchBooks(
   offset: number,
   sortBy?:string,
   orderBy?:string,
-) {
+) { 
   try {
     
     const books = await bookRepo.list({
@@ -139,7 +183,7 @@ export async function fetchBooks(
 export async function addNewBook(prevState: State, formData: FormData) {
   const data = Object.fromEntries(formData.entries());
 
-  const validateFields = bookBaseSchema.safeParse({
+  const validateFields = newBookBaseSchema.safeParse({
     title: formData.get("title"),
     author: formData.get("author"),
     publisher: formData.get("publisher"),
@@ -147,7 +191,11 @@ export async function addNewBook(prevState: State, formData: FormData) {
     isbnNo: formData.get("isbnNo"),
     pages: Number(formData.get("pages")),
     totalCopies: Number(formData.get("totalCopies")),
+    price: 200
   });
+
+  const imageUrl = formData.get("imageURL") as string
+  console.log("URL:",imageUrl)
 
   if (!validateFields.success) {
     console.log("Validation Failure");
@@ -157,7 +205,7 @@ export async function addNewBook(prevState: State, formData: FormData) {
     };
   }
 
-  const { title, author, publisher, genre, isbnNo, pages, totalCopies } =
+  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price } =
     validateFields.data;
 
   if (
@@ -167,7 +215,7 @@ export async function addNewBook(prevState: State, formData: FormData) {
     !genre ||
     !isbnNo ||
     !pages ||
-    !totalCopies
+    !totalCopies || !price
   ) {
     console.log("All fields are required");
     return { message: "All fields are required" };
@@ -189,6 +237,8 @@ export async function addNewBook(prevState: State, formData: FormData) {
       isbnNo,
       pages,
       totalCopies,
+      price,
+      imageUrl
     };
 
     const createdBook = await bookRepo.create(newBook);
@@ -197,7 +247,7 @@ export async function addNewBook(prevState: State, formData: FormData) {
     return { message: "Success" };
   } catch (error) {
     console.log("Error during book registration:", error);
-    return { message: "Error during book registration.", error };
+    return { message: "Error during book registration."};
   }
 }
 

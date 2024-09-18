@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1726651594277,
+      "tag": "0000_woozy_morph",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1726660138740,
+      "tag": "0001_charming_fabian_cortez",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1726660173570,
+      "tag": "0002_magical_lilandra",
+      "breakpoints": true
+    }
+  ]
+}

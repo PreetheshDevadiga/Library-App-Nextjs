@@ -4,11 +4,12 @@ import { and, count, eq, sql } from "drizzle-orm";
 import { ITransactionRepository } from "./repository";
 import { ITransaction, ITransactionBase } from "../models/transaction.model";
 import { IPagedResponse, IPageRequest } from "./pagination.response";
+import { VercelPgDatabase } from "drizzle-orm/vercel-postgres";
 
 export class TransactionRepository
   implements ITransactionRepository<ITransactionBase, ITransaction>
 {
-  constructor(private readonly db: MySql2Database<Record<string, unknown>>) {}
+  constructor(private readonly db: VercelPgDatabase<Record<string, unknown>>) {}
 
   async create(data: {
     memberId: number;
@@ -24,7 +25,7 @@ export class TransactionRepository
       const [result] = await this.db
         .insert(TransactionTable)
         .values(transaction)
-        .$returningId();
+        .returning({id:TransactionTable.id});
       const [insertedTransaction] = await this.db
         .select()
         .from(TransactionTable)

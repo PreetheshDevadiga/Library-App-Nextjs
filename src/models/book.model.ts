@@ -57,6 +57,8 @@ export const bookBaseSchema = z.object({
     .int({ message: "Total number of copies must be an integer" })
     .min(1, { message: "Number of pages must be at least 1" })
     .positive({ message: "Total number of copies must be a positive integer" }),
+  price: z.number().nullable(),
+  imageUrl:z.string().nullable()
 
   //   price: z
   //   .number()
@@ -70,6 +72,10 @@ export const bookBaseSchema = z.object({
   //   .optional()
 });
 
+export const newBookBaseSchema = bookBaseSchema.omit({
+  imageUrl:true
+})
+
 export const bookSchema = bookBaseSchema.extend({
   id: z
     .number()
@@ -81,6 +87,7 @@ export const bookSchema = bookBaseSchema.extend({
     .nonnegative({
       message: "Available number of copies must be a non-negative integer",
     }),
+  
 });
 
 export type IBookBase = z.infer<typeof bookBaseSchema>;
