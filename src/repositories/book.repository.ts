@@ -102,8 +102,8 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
 
   async list(params: IPageRequest): Promise<IPagedResponse<IBook>> {
     try {
-      const sortBy=params.sortBy;
-      const orderBy=params.orderBy;
+      const sortBy=params.sortBy || "id";
+      const orderBy=params.orderBy || "asc";
       const search = params.search?.toLowerCase();
       const whereExpression = search
         ? or(
@@ -116,17 +116,6 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
         if (sortBy && orderBy && ['asc', 'desc'].includes(orderBy)){
          sortingOrder = orderBy==="asc" ? asc(BooksTable[sortBy as keyof IBook]) : desc(BooksTable[sortBy as keyof IBook])
         }
-
-        const query = this.db
-  .select()
-  .from(BooksTable)
-  .where(whereExpression)
-  .orderBy(sortingOrder)
-  .limit(params.limit)
-  .offset(params.offset);
-
-// Log the generated SQL query
-console.log('Generated SQL Query:', query.toSQL());
 
       const books = await this.db
         .select()

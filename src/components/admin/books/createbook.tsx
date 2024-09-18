@@ -135,6 +135,22 @@ export function CreateBookForm() {
                 className="w-full"
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bookImage" className="text-sm font-medium">
+                Book Image
+              </Label>
+              <Input
+                id="bookImage"
+                name="bookImage"
+                type="file"
+                accept="image/*"
+                // onChange={handleImageChange}
+                required
+                className="w-full"
+              />
+            </div>
+
           </div>
 
           <Button className="w-full mt-4 md:mt-6" type="submit">

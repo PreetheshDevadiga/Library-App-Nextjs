@@ -127,7 +127,6 @@ export async function fetchBooks(
       orderBy:orderBy,
     });
     if (books) {
-      console.log("Received books");
       return books;
     } else {
       console.log("Books not received");
