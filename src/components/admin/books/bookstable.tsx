@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -26,38 +26,17 @@ type SortColumn = 'title' | 'author';
 const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const router = useRouter();
   
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
-  const [sortColumn, setSortColumn] = useState<SortColumn>('title');
-
-  // Watch for changes in searchParams to handle sorting on first click
-  useEffect(() => {
-    const sortBy = searchParams.get('sortBy') as SortColumn | null;
-    const orderBy = searchParams.get('orderBy') as SortOrder | null;
-
-    if (sortBy) {
-      setSortColumn(sortBy);
-    }
-    if (orderBy) {
-      setSortOrder(orderBy);
-    }
-  }, [searchParams]);
+  const sortColumn = searchParams.get('sortBy') as SortColumn || 'title';
+  const sortOrder = searchParams.get('orderBy') as SortOrder || 'asc';
 
   const handleSort = (column: SortColumn) => {
-    // Toggle the sorting order for the clicked column
-    const newSortOrder = sortColumn === column && sortOrder === 'asc' ? 'desc' : 'asc';
-
+    const newSortOrder = column === sortColumn && sortOrder === 'asc' ? 'desc' : 'asc';
     const params = new URLSearchParams(searchParams);
     params.set('sortBy', column);
     params.set('orderBy', newSortOrder);
-
-    // Update URL without reloading the page
-    replace(`${pathname}?${params.toString()}`);
-
-    // Set local states for immediate UI update
-    setSortColumn(column);
-    setSortOrder(newSortOrder);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
@@ -65,7 +44,6 @@ const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
       <Table>
         <TableHeader>
           <TableRow>
-            {/* Sort arrows always visible */}
             <TableHead
               className="w-[150px] cursor-pointer"
               onClick={() => handleSort('title')}
