@@ -274,7 +274,8 @@ export async function updateBook(
     isbnNo: formData.get("isbnNo"),
     pages: Number(formData.get("pages")),
     totalCopies: Number(formData.get("totalCopies")),
-    price:200
+    price:Number(formData.get("price")),
+    imageUrl:formData.get("imageUrl")
   });
 
   if (!validateFields.success) {
@@ -302,6 +303,8 @@ export async function updateBook(
     return { message: "All fields are required" };
   }
 
+  const imageUrl = formData.get("imageURL") as string
+
   try {
     await bookRepo.update(id, {
       title,
@@ -311,15 +314,15 @@ export async function updateBook(
       isbnNo,
       pages,
       totalCopies,
-      price:200,
-      imageUrl:"",
+      price,
+      imageUrl,
     });
 
     console.log(`Book ${title} updated successfully!`);
     return { message: "Success" };
   } catch (error) {
     console.log("Error during book update:", error);
-    return { message: "Error during book update.", error };
+    return { message: "Error during book update." };
   }
 }
 
