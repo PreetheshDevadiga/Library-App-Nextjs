@@ -18,7 +18,7 @@ export default function LandingPage() {
       </header>
 
       <main className="bg-gray-800">
-        <section className="py-20">
+        <section className="py-10">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-100 mb-6">
               Your Digital BookShelf

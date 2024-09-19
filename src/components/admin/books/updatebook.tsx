@@ -56,7 +56,7 @@ const updateBookById=updateBook.bind(null,book.id)
                {state.errors?.title ? (
                 <p className="text-red-500 text-sm">{state.errors.title}</p>
               ) : (
-                <div className="min-h-5"></div>
+                <div ></div>
               )}
             </div>
 
@@ -76,7 +76,7 @@ const updateBookById=updateBook.bind(null,book.id)
               {state.errors?.author ? (
                 <p className="text-red-500 text-sm">{state.errors.author}</p>
               ) : (
-                <div className="min-h-5"></div>
+                <div  ></div>
               )}
             </div>
 
@@ -96,7 +96,7 @@ const updateBookById=updateBook.bind(null,book.id)
               {state.errors?.publisher ? (
                 <p className="text-red-500 text-sm">{state.errors.publisher}</p>
               ) : (
-                <div className="min-h-4"></div>
+                <div></div>
               )}
             </div>
 
@@ -116,7 +116,7 @@ const updateBookById=updateBook.bind(null,book.id)
               {state.errors?.genre ? (
                 <p className="text-red-500 text-sm">{state.errors.genre}</p>
               ) : (
-                <div className="min-h-4"></div>
+                <div  ></div>
               )}
             </div>
 
@@ -136,7 +136,7 @@ const updateBookById=updateBook.bind(null,book.id)
               {state.errors?.isbnNo ? (
                 <p className="text-red-500 text-sm">{state.errors.isbnNo}</p>
               ) : (
-                <div className="min-h-4"></div>
+                <div  ></div>
               )}
             </div>
 
@@ -156,7 +156,7 @@ const updateBookById=updateBook.bind(null,book.id)
               {state.errors?.pages ? (
                 <p className="text-red-500 text-sm">{state.errors.pages}</p>
               ) : (
-                <div className="min-h-4"></div>
+                <div  ></div>
               )}
             </div>
 
@@ -176,7 +176,7 @@ const updateBookById=updateBook.bind(null,book.id)
               {state.errors?.totalCopies ? (
                 <p className="text-red-500 text-sm">{state.errors.totalCopies}</p>
               ) : (
-                <div className="min-h-4"></div>
+                <div ></div>
               )}
             </div>
           </div>

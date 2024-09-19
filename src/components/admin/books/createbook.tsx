@@ -6,7 +6,7 @@ import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
 import { useActionState } from "react";
-import { addNewBook, State,uploadImage } from "../../../lib/action";
+import { addNewBook, State, uploadImage } from "../../../lib/action";
 import { toast } from "@/components/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -32,6 +32,12 @@ export function CreateBookForm() {
     }
   };
 
+  const handleFormData = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    formAction(formData);
+  };
+
   useEffect(() => {
     if (state.message === "Success") {
       toast({
@@ -39,17 +45,17 @@ export function CreateBookForm() {
         description: "The book has been added to the collection.",
         className: "bg-green-500",
         duration: 2000,
-      })
-      router.push("/admin/books")
+      });
+      router.push("/admin/books");
     } else if (state.message) {
       toast({
         title: "Error",
         description: state.message,
         className: "bg-red-500",
         duration: 2000,
-      })
+      });
     }
-  }, [router, state.message])
+  }, [router, state.message]);
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -59,7 +65,7 @@ export function CreateBookForm() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-4 md:space-y-6">
+        <form onSubmit={handleFormData} className="space-y-4 md:space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title" className="text-sm font-medium">
@@ -74,6 +80,11 @@ export function CreateBookForm() {
                 required
                 className="w-full"
               />
+              {state.errors?.title ? (
+                <p className="text-red-500 text-sm">{state.errors.title}</p>
+              ) : (
+                <div></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -88,6 +99,11 @@ export function CreateBookForm() {
                 required
                 className="w-full"
               />
+              {state.errors?.author ? (
+                <p className="text-red-500 text-sm">{state.errors.author}</p>
+              ) : (
+                <div></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -102,6 +118,11 @@ export function CreateBookForm() {
                 required
                 className="w-full"
               />
+              {state.errors?.publisher ? (
+                <p className="text-red-500 text-sm">{state.errors.publisher}</p>
+              ) : (
+                <div></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -116,6 +137,11 @@ export function CreateBookForm() {
                 required
                 className="w-full"
               />
+              {state.errors?.genre ? (
+                <p className="text-red-500 text-sm">{state.errors.genre}</p>
+              ) : (
+                <div></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -130,6 +156,11 @@ export function CreateBookForm() {
                 required
                 className="w-full"
               />
+              {state.errors?.isbnNo ? (
+                <p className="text-red-500 text-sm">{state.errors.isbnNo}</p>
+              ) : (
+                <div ></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -144,6 +175,11 @@ export function CreateBookForm() {
                 required
                 className="w-full"
               />
+              {state.errors?.pages ? (
+                <p className="text-red-500 text-sm">{state.errors.pages}</p>
+              ) : (
+                <div></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -158,6 +194,13 @@ export function CreateBookForm() {
                 required
                 className="w-full"
               />
+              {state.errors?.totalCopies ? (
+                <p className="text-red-500 text-sm">
+                  {state.errors.totalCopies}
+                </p>
+              ) : (
+                <div></div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -172,8 +215,13 @@ export function CreateBookForm() {
                 required
                 className="w-full"
               />
+              {state.errors?.price ? (
+                <p className="text-red-500 text-sm">{state.errors.price}</p>
+              ) : (
+                <div ></div>
+              )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="bookImage" className="text-sm font-medium">
                 Book Image
@@ -192,7 +240,11 @@ export function CreateBookForm() {
             </div>
           </div>
 
-          <Button className="w-full mt-4 md:mt-6" type="submit" disabled={isUploading}>
+          <Button
+            className="w-full mt-4 md:mt-6"
+            type="submit"
+            disabled={isUploading}
+          >
             Add Book
           </Button>
         </form>
