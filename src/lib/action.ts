@@ -112,7 +112,7 @@ console.log(data);
     console.log("Failure");
     return {
       errors: validateFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create Invoice.",
+      message: "Missing Fields. Failed to Create Account.",
     };
   }
 
@@ -143,10 +143,10 @@ console.log(data);
     };
 
     if(password!==data.confirmPassword){
+      console.log("im here");
       return { message: "Passwords do not match" };
     }
     const createdUser = await memberRepo.create(newUser);
-
     console.log(`User ${createdUser.email} created successfully!`);
     return { message: "Success" };
   } catch (error) {
@@ -302,7 +302,7 @@ export async function updateBook(
     return { message: "All fields are required" };
   }
 
-  const newImageUrl = formData.get("imageURL") as string
+  const imageUrl = formData.get("imageURL") as string
 
   try {
     await bookRepo.update(id, {
@@ -314,7 +314,7 @@ export async function updateBook(
       pages,
       totalCopies,
       price,
-      imageUrl:newImageUrl,
+      imageUrl,
     });
 
     console.log(`Book ${title} updated successfully!`);
