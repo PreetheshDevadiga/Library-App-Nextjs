@@ -274,8 +274,7 @@ export async function updateBook(
     isbnNo: formData.get("isbnNo"),
     pages: Number(formData.get("pages")),
     totalCopies: Number(formData.get("totalCopies")),
-    price:Number(formData.get("price")),
-    imageUrl:formData.get("imageUrl")
+    price:Number(formData.get("price"))
   });
 
   if (!validateFields.success) {
@@ -287,7 +286,7 @@ export async function updateBook(
     };
   }
 
-  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price ,imageUrl} =
+  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price} =
     validateFields.data;
 
   if (
@@ -297,7 +296,7 @@ export async function updateBook(
     !genre ||
     !isbnNo ||
     !pages ||
-    !totalCopies || !price === undefined
+    !totalCopies  === undefined
   ) {
     console.log("All fields are required");
     return { message: "All fields are required" };
