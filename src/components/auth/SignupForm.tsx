@@ -9,7 +9,8 @@ import React, { useEffect } from "react";
 import { registerUser, State } from "@/lib/action";
 import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
-import { useActionState } from "react"; // Assuming you have this hook
+import { useActionState } from "react"; 
+import { toast } from "@/components/use-toast";
 
 const RegisterForm = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -18,9 +19,29 @@ const RegisterForm = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (state.message === "Success") {
+      toast({
+        title: "Sign Up Successful",
+        description: "Welcome! You have successfully registered.",
+        className: "bg-green-500",
+        duration: 1000, 
+      });
       router.push("/login");
+    }else if (state.message && state.message !== "Success") {
+      toast({
+        title: "Sign Up Failed",
+        description: "There was an error during registration. Please try again.",
+        className: "bg-red-500",
+        duration: 3000, 
+      });
     }
+
   }, [state, router]);
+
+  const handleFormData = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    formAction(formData);
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -30,7 +51,7 @@ const RegisterForm = ({ children }: { children: React.ReactNode }) => {
           <p className="text-center">Sign up now to become a member.</p>
         </CardHeader>
         <CardContent>
-          <form action={formAction}>
+          <form onSubmit={handleFormData}>
             <div className="space-y-2">
               <div className="flex flex-row gap-2">
                 <div className="space-y-2">
@@ -120,5 +141,8 @@ export default RegisterForm;
 
 
 
-//TODO: pre-populate the user eneterd values
-//Todo: password-confir password error. display proper error message.
+//todo:toast message signup
+//todo:search function books admin
+//todo:editprofile profile
+//todo:sorting error
+//todo:filter

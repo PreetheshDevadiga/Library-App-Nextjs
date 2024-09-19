@@ -14,8 +14,10 @@ export default function BorrowBook({ memberId, bookId }: BorrowBookProps) {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleBorrow = async () => {
+  const handleBorrow = async (e:React.MouseEvent) => {
+    e.stopPropagation();
     try {
+      
       const result = await requestBook(memberId, bookId);
       if (result) {
         toast({
