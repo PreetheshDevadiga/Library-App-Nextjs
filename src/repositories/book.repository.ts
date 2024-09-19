@@ -103,8 +103,8 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
 
   async list(params: IPageRequest): Promise<IPagedResponse<IBook>> {
     try {
-      const sortBy=params.sortBy || "id";
-      const orderBy=params.orderBy || "asc";
+      let sortBy=params.sortBy?.toLowerCase() || "id";
+      const orderBy=params.orderBy?.toLowerCase() || "asc";
       const search = params.search?.toLowerCase();
       const whereExpression = search
         ? or(
@@ -112,7 +112,9 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
             like(BooksTable.isbnNo, `%${search}%`)
           )
         : undefined;
-
+          if(sortBy==="all"){
+            sortBy="id";
+          }
         let sortingOrder=sql``
         if (sortBy && orderBy && ['asc', 'desc'].includes(orderBy)){
          sortingOrder = orderBy==="asc" ? asc(BooksTable[sortBy as keyof IBook]) : desc(BooksTable[sortBy as keyof IBook])

@@ -6,14 +6,12 @@ import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
 import { useActionState } from "react";
-import { addNewBook,State, uploadImage } from "../../../lib/action";
+import { addNewBook, State,uploadImage } from "../../../lib/action";
 import { toast } from "@/components/use-toast";
 import { useRouter } from "next/navigation";
-import { Suspense } from 'react'
-import { error } from "console";
 
 export function CreateBookForm() {
-  const router=useRouter();
+  const router = useRouter();
   const initialState: State = { message: "", errors: {} };
   const [state, formAction] = useActionState(addNewBook, initialState);
   const [imageURL, setImageURL] = useState("");
@@ -26,11 +24,10 @@ export function CreateBookForm() {
       const result = await uploadImage(file);
       setIsUploading(false);
       if (result.imageURL) {
-        console.log("imahe",result.imageURL)
+        console.log("imahe", result.imageURL);
         setImageURL(result.imageURL);
       } else if (result.error) {
         throw new Error(result.error);
-       
       }
     }
   };
@@ -39,14 +36,21 @@ export function CreateBookForm() {
     if (state.message === "Success") {
       toast({
         title: "Book Added Successfully",
-        description: "The book has been added to collection.",
+        description: "The book has been added to the collection.",
         className: "bg-green-500",
         duration: 2000,
-      });
-      router.push('/admin/books');
+      })
+      router.push("/admin/books")
+    } else if (state.message) {
+      toast({
+        title: "Error",
+        description: state.message,
+        className: "bg-red-500",
+        duration: 2000,
+      })
     }
-  }, [router, state.message]);
-  
+  }, [router, state.message])
+
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="pb-4 md:pb-6">
@@ -157,6 +161,20 @@ export function CreateBookForm() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="price" className="text-sm font-medium">
+                Price
+              </Label>
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                placeholder="Price"
+                required
+                className="w-full"
+              />
+            </div>
+            
+            <div className="space-y-2">
               <Label htmlFor="bookImage" className="text-sm font-medium">
                 Book Image
               </Label>
@@ -172,10 +190,9 @@ export function CreateBookForm() {
               {isUploading && <p>Uploading image...</p>}
               <input type="hidden" name="imageURL" value={imageURL} />
             </div>
-
           </div>
 
-          <Button className="w-full mt-4 md:mt-6" type="submit">
+          <Button className="w-full mt-4 md:mt-6" type="submit" disabled={isUploading}>
             Add Book
           </Button>
         </form>

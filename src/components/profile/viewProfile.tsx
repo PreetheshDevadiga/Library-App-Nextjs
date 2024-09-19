@@ -56,7 +56,7 @@ export default async function UserProfile() {
               </Button>
             </div>
             <h2 className="mt-4 text-3xl font-bold text-gray-800">
-              {fullName}
+              {fullName ? fullName :""  }
             </h2>
           </div>
 
@@ -70,19 +70,19 @@ export default async function UserProfile() {
                 <p className="text-gray-800">
                   {userRegisteredWithGoogle?.email ||
                     userRegisteredWithCredentials?.email ||
-                    "N/A"}
+                    "-"}
                 </p>
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Phone</p>
                 <p className="text-gray-800">
-                  {userRegisteredWithCredentials?.phone || "N/A"}
+                  {userRegisteredWithCredentials?.phone || "-"}
                 </p>
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Address</p>
                 <p className="text-gray-800">
-                  {userRegisteredWithCredentials?.address || "N/A"}
+                  {userRegisteredWithCredentials?.address || "-"}
                 </p>
               </div>
             </div>

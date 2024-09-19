@@ -8,15 +8,7 @@ import Google from "next-auth/providers/google";
 import { z } from "zod";
 import { authConfig } from "./auth.config";
 import { addNewMember, createUser, getUserByEmail } from "./lib/action";
-// async function getUser(email: string): Promise<User | undefined> {
-//   try {
-//     const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
-//     return user.rows[0];
-//   } catch (error) {
-//     console.error("Failed to fetch user:", error);
-//     throw new Error("Failed to fetch user.");
-//   }
-// }
+
 const memberRepo = new MemberRepository(db);
 
 // Define the mapping from IMember to User type
@@ -25,7 +17,7 @@ function mapMemberToUser(member: IMember): User {
     id: String(member.id), // Convert id to string
     name: member.firstName,
     email: member.email,
-    role: member.role
+    role: member.role,
   };
 }
 
@@ -42,7 +34,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const user = await memberRepo.getByEmail(email);
-          if (!user) return null;
+          if (!user) {
+            return null;
+          }
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (passwordsMatch) {
@@ -58,9 +52,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return null;
       },
     }),
-    
   ],
-  callbacks:{
+  callbacks: {
     ...authConfig.callbacks,
     async signIn({ user, account }) {
       if (account?.provider === "google") {
@@ -86,6 +79,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return true;
     },
-  }
- 
+  },
 });

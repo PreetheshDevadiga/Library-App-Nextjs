@@ -12,13 +12,14 @@ import { bookBaseSchema, IBookBase, newBookBaseSchema } from "@/models/book.mode
 import { BooksTable, MemberTable, TransactionTable } from "@/drizzle/schema";
 import { eq, and, ne } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import { v2 as cloudinary } from "cloudinary";
+import { cloudinary } from "./cloudinary";
 
-cloudinary.config({
-  cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:process.env.CLOUDINARY_API_KEY,
-  api_secret:process.env.CLOUDINARY_API_SECRET,
-})
+
+// cloudinary.config({
+//   cloud_name:process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+//   api_key:process.env.CLOUDINARY_API_KEY,
+//   api_secret:process.env.CLOUDINARY_API_SECRET,
+// })
 
 const memberRepo = new MemberRepository(db);
 
@@ -150,7 +151,7 @@ console.log(data);
     return { message: "Success" };
   } catch (error) {
     console.log("Error during registration:", error);
-    return { message: "Error during registration:", error };
+    return { message: "Error during registration:" };
   }
 }
 
@@ -191,7 +192,7 @@ export async function addNewBook(prevState: State, formData: FormData) {
     isbnNo: formData.get("isbnNo"),
     pages: Number(formData.get("pages")),
     totalCopies: Number(formData.get("totalCopies")),
-    price: 200
+    price: Number(formData.get("price"))
   });
 
   const imageUrl = formData.get("imageURL") as string
@@ -273,6 +274,7 @@ export async function updateBook(
     isbnNo: formData.get("isbnNo"),
     pages: Number(formData.get("pages")),
     totalCopies: Number(formData.get("totalCopies")),
+    price:200
   });
 
   if (!validateFields.success) {
@@ -284,7 +286,7 @@ export async function updateBook(
     };
   }
 
-  const { title, author, publisher, genre, isbnNo, pages, totalCopies } =
+  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price } =
     validateFields.data;
 
   if (
@@ -294,7 +296,7 @@ export async function updateBook(
     !genre ||
     !isbnNo ||
     !pages ||
-    !totalCopies === undefined
+    !totalCopies || !price === undefined
   ) {
     console.log("All fields are required");
     return { message: "All fields are required" };
@@ -309,6 +311,8 @@ export async function updateBook(
       isbnNo,
       pages,
       totalCopies,
+      price:200,
+      imageUrl:"",
     });
 
     console.log(`Book ${title} updated successfully!`);

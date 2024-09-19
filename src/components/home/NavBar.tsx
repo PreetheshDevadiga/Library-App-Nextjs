@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { ProfileDropDown } from "../profile/profileDropdown";
+import { ProfileDropDown } from "../profile/profiledropDownUser";
 import { BookOpen } from "lucide-react";
 
 export const NavBar = ({ children }: { children: React.ReactNode }) => {

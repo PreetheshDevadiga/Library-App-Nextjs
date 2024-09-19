@@ -1,9 +1,18 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from 'cloudinary';
+import '@/drizzle/envConfig';
 
-cloudinary.config({
-    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
-    api_key:process.env.CLOUDINARY_API_KEY,
-    api_secret:process.env.CLOUDINARY_API_SECRET,
-})
+const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.trim();
+const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY?.trim();
+const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET?.trim();
 
-export default cloudinary;
+if (cloudName && apiKey && apiSecret) {
+  cloudinary.config({
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+  });
+} else {
+  console.warn('Cloudinary environment variables are not fully set');
+}
+
+export { cloudinary };
