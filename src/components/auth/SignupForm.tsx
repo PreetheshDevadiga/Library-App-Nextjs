@@ -18,15 +18,17 @@ const RegisterForm = ({ children }: { children: React.ReactNode }) => {
   const [state, formAction] = useActionState(registerUser, initialState);
 
   useEffect(() => {
+
     if (state.message === "Success") {
       toast({
         title: "Sign Up Successful",
         description: "Welcome! You have successfully registered.",
         className: "bg-green-500",
-        duration: 1000, 
+        duration: 2000, 
       });
       router.push("/login");
     }else if (state.message && state.message !== "Success") {
+
       toast({
         title: "Sign Up Failed",
         description: "There was an error during registration. Please try again.",

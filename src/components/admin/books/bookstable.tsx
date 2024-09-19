@@ -12,7 +12,7 @@ import {
 import { EditBook } from './editBook';
 import { DeleteBook } from './deleteBook';
 import { IBook } from '@/models/book.model';
-import { usePathname, useSearchParams,useRouter } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 type BooksTableProps = {
   booksList: IBook[];
@@ -24,25 +24,40 @@ type SortOrder = 'asc' | 'desc';
 type SortColumn = 'title' | 'author';
 
 const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
-  const searchParams= useSearchParams();
-  const pathname=usePathname();
-  const params = new URLSearchParams(searchParams);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { replace } = useRouter();
+  
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [sortColumn, setSortColumn] = useState<SortColumn>('title');
 
-  const handleSort = (column: SortColumn) => { 
-    if (column) {
-      params.set('sortBy', column);
-      params.set('orderBy',sortOrder)
-    } else {
-      params.delete('sortBy');
-      params.delete('orderBy');
+  // Watch for changes in searchParams to handle sorting on first click
+  useEffect(() => {
+    const sortBy = searchParams.get('sortBy') as SortColumn | null;
+    const orderBy = searchParams.get('orderBy') as SortOrder | null;
+
+    if (sortBy) {
+      setSortColumn(sortBy);
     }
+    if (orderBy) {
+      setSortOrder(orderBy);
+    }
+  }, [searchParams]);
+
+  const handleSort = (column: SortColumn) => {
+    // Toggle the sorting order for the clicked column
+    const newSortOrder = sortColumn === column && sortOrder === 'asc' ? 'desc' : 'asc';
+
+    const params = new URLSearchParams(searchParams);
+    params.set('sortBy', column);
+    params.set('orderBy', newSortOrder);
+
+    // Update URL without reloading the page
     replace(`${pathname}?${params.toString()}`);
-    
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+
+    // Set local states for immediate UI update
     setSortColumn(column);
+    setSortOrder(newSortOrder);
   };
 
   return (
@@ -50,17 +65,18 @@ const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
       <Table>
         <TableHeader>
           <TableRow>
+            {/* Sort arrows always visible */}
             <TableHead
               className="w-[150px] cursor-pointer"
               onClick={() => handleSort('title')}
             >
-              Title {sortColumn === 'title' && (sortOrder === 'asc' ? '↑' : '↓')}
+              Title {sortColumn === 'title' ? (sortOrder === 'asc' ? '↑' : '↓') : '↕'}
             </TableHead>
             <TableHead
               className="cursor-pointer"
               onClick={() => handleSort('author')}
             >
-              Author {sortColumn === 'author' && (sortOrder === 'asc' ? '↑' : '↓')}
+              Author {sortColumn === 'author' ? (sortOrder === 'asc' ? '↑' : '↓') : '↕'}
             </TableHead>
             <TableHead>Publisher</TableHead>
             <TableHead>ISBN</TableHead>
@@ -105,6 +121,5 @@ const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
     </div>
   );
 };
-
 
 export default BooksTable;
