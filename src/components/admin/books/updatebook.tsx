@@ -47,7 +47,7 @@ export function UpdateBookForm({ book }: { book: IBook }) {
       });
       router.push("/admin/books");
     }
-    if (state.message !== "Success") {
+    else if (state.message !== "Success") {
       toast({
         title: "Error Updating Book",
         description: "There was an issue updating the book. Please try again.",
@@ -228,7 +228,7 @@ export function UpdateBookForm({ book }: { book: IBook }) {
               ) : (
                 <div></div>
               )}
-              
+
             </div>
 
             <div className="space-y-2">

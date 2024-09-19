@@ -206,7 +206,7 @@ export async function addNewBook(prevState: State, formData: FormData) {
     };
   }
 
-  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price } =
+  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price} =
     validateFields.data;
 
   if (
@@ -287,7 +287,7 @@ export async function updateBook(
     };
   }
 
-  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price } =
+  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price ,imageUrl} =
     validateFields.data;
 
   if (
@@ -303,7 +303,7 @@ export async function updateBook(
     return { message: "All fields are required" };
   }
 
-  const imageUrl = formData.get("imageURL") as string
+  const newImageUrl = formData.get("imageURL") as string
 
   try {
     await bookRepo.update(id, {
@@ -315,7 +315,7 @@ export async function updateBook(
       pages,
       totalCopies,
       price,
-      imageUrl,
+      imageUrl:newImageUrl,
     });
 
     console.log(`Book ${title} updated successfully!`);
