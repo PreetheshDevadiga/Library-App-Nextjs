@@ -47,14 +47,15 @@ export function UpdateBookForm({ book }: { book: IBook }) {
       });
       router.push("/admin/books");
     }
-    else if (state.message !== "Success") {
+    else if (state.message && state.message !== "Success") {
       toast({
         title: "Error Updating Book",
-        description: "There was an issue updating the book. Please try again.",
+        description: state.message || "There was an issue updating the book. Please try again.",
         className: "bg-red-500",
         duration: 2000,
       });
     }
+  
   }, [state, router, toast]);
 
   return (
