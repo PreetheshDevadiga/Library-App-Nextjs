@@ -80,9 +80,14 @@ export async function authenticate(
       email: formData.get("email"),
       password: formData.get("password")
     });
-    if(result){
-      redirect("/home")
+    const email = formData.get("email");
+    const userDetails = await memberRepo.getByEmail(email as string);
+    const userRole = userDetails?.role;
+    console.log(userRole)
+    if(userRole === "admin"){
+      redirect("/admin")
     }
+    redirect("/home")
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
