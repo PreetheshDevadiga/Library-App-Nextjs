@@ -66,7 +66,6 @@ export const bookBaseSchema = z.object({
     .string()
     .url({ message: "Image URL must be a valid URL" })
     .nullable()
-    .optional()
 });
 
 // New book schema without imageUrl

@@ -9,7 +9,8 @@
     "lint": "next lint",
     "generate": "drizzle-kit generate",
     "drop": "drizzle-kit drop",
-    "migrate": "ts-node ./src/drizzle/migrate.ts"
+    "migrate": "ts-node ./src/drizzle/migrate.ts",
+    "commit": "cz"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.5",
@@ -27,6 +28,7 @@
     "class-variance-authority": "^0.7.0",
     "cloudinary": "^2.5.0",
     "clsx": "^2.1.1",
+    "commitizen": "^4.3.0",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.33.0",
     "drizzle-orm-pg": "^0.16.3",
