@@ -149,8 +149,12 @@ export class TransactionRepository
     }
   }
 
-  async list(params: IPageRequest, status?: string){
+  async list(params: IPageRequest, status?: string) {
     try {
+      console.log(status)
+      // Only apply where expression if status is not "All" and not undefined
+      const whereExpression = status && status !== "All" ? eq(TransactionTable.status, status) : undefined;
+  
       const query = this.db
         .select({
           id: TransactionTable.id,
@@ -166,23 +170,25 @@ export class TransactionRepository
         .leftJoin(MemberTable, eq(TransactionTable.memberId, MemberTable.id))
         .limit(params.limit)
         .offset(params.offset);
-
-      if (status && status !== "All") {
-        query.where(eq(TransactionTable.status, status));
+  
+      // Conditionally add where clause if whereExpression is valid
+      if (whereExpression) {
+        query.where(whereExpression);
       }
   
       const transactions = await query;
   
       const countQuery = this.db
-      .select({ count: count() })
-      .from(TransactionTable);
-
-      if (status && status !== "All") {
-        countQuery.where(eq(TransactionTable.status, status));
+        .select({ count: count() })
+        .from(TransactionTable);
+  
+      // Apply where clause to count query if necessary
+      if (whereExpression) {
+        countQuery.where(whereExpression);
       }
-
+  
       const [totalTransactionRows] = await countQuery;
-    const totalTransaction = totalTransactionRows.count;
+      const totalTransaction = totalTransactionRows.count;
   
       return {
         items: transactions,
@@ -196,6 +202,7 @@ export class TransactionRepository
       throw new Error(`Listing Transactions failed: ${e.message}`);
     }
   }
+  
   
   // async listByStatus(
   //   status: string,
@@ -235,8 +242,8 @@ export class TransactionRepository
       const search = BigInt(params.search);
   
       searchWhereClause = sql`
-      (${TransactionTable.bookId} LIKE ${params.search} 
-       OR ${TransactionTable.memberId} LIKE ${params.search})
+      (${TransactionTable.bookId} ILIKE ${params.search} 
+       OR ${TransactionTable.memberId} ILIKE ${params.search})
       `;
     }
   
