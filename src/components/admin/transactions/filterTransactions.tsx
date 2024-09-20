@@ -11,13 +11,12 @@ export default function FilterTransaction() {
   const { replace } = useRouter();
   const router = useRouter();
   
-  // State to keep track of the selected filter
+ 
   const [selectedFilter, setSelectedFilter] = useState<string>(searchParams.get("filter") || "All");
 
-  // UseEffect to handle URL changes or pathname/replace changes
   useEffect(() => {
     const currentFilter = searchParams.get("filter") || "All";
-    setSelectedFilter(currentFilter); // Set initial value based on URL
+    setSelectedFilter(currentFilter); 
   }, [searchParams, pathname, replace]);
 
   const handleFilterOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -25,22 +24,22 @@ export default function FilterTransaction() {
     setSelectedFilter(selectedValue);
 
     const params = new URLSearchParams(searchParams);
-    params.set("page", "1"); // Reset the page to 1 on filter change
+    params.set("page", "1");
 
     if (selectedValue === "All") {
-      params.delete("filter"); // Remove filter when 'All' is selected
+      params.delete("filter");
     } else {
       params.set("filter", selectedValue);
     }
 
     replace(`${pathname}?${params.toString()}`);
-    router.refresh(); // Refresh the page after the URL is updated
+    router.refresh(); 
   };
 
   return (
     <select
       className="p-2 border rounded-md"
-      value={selectedFilter} // Set the value based on selectedFilter state
+      value={selectedFilter}
       onChange={handleFilterOptionChange}
     >
       {statuses.map((status) => (
