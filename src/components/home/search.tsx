@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from "../ui/input";
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -9,7 +9,7 @@ export function SearchBar() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-
+  const router= useRouter();
 
   const [searchQuery, setSearchQuery] = useState<string | null>(searchParams.get("query"));
 
@@ -24,6 +24,7 @@ export function SearchBar() {
     }
     
     replace(`${pathname}?${params.toString()}`);
+    router.refresh();
   }, 300);
 
   useEffect(() => {
