@@ -486,7 +486,7 @@ export async function fetchTransaction(
 }
 
 export async function fetchTransactionByStatus(
-  filterOption: string,
+  filterOption: string | undefined,
   search: string,
   limit: number,
   offset: number

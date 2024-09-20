@@ -25,7 +25,7 @@ async function TransactionTable({
   };
 }) {
   const query: string = searchParams?.query || "";
-  const filterOption=searchParams?.filter || "All"
+  const filterOption=searchParams?.filter
   const currentPage = Number(searchParams?.page) || 1;
   const limit = 6;
   const offset = (Number(currentPage) - 1) * limit;
