@@ -12,18 +12,18 @@ export default function FilterTransaction() {
   const router = useRouter();
   
   // State to keep track of the selected filter
-  const [selectedFilter, setSelectedFilter] = useState<string>(searchParams.get("filter") as string);
+  const [selectedFilter, setSelectedFilter] = useState<string>(searchParams.get("filter") || "All");
 
+  // UseEffect to handle URL changes or pathname/replace changes
   useEffect(() => {
     const currentFilter = searchParams.get("filter") || "All";
     setSelectedFilter(currentFilter); // Set initial value based on URL
-  }, [searchParams]);
+  }, [searchParams, pathname, replace]);
 
   const handleFilterOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    router.refresh();
     const selectedValue = e.target.value;
     setSelectedFilter(selectedValue);
-    
+
     const params = new URLSearchParams(searchParams);
     params.set("page", "1"); // Reset the page to 1 on filter change
 
@@ -34,6 +34,7 @@ export default function FilterTransaction() {
     }
 
     replace(`${pathname}?${params.toString()}`);
+    router.refresh(); // Refresh the page after the URL is updated
   };
 
   return (
