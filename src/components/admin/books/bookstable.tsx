@@ -37,6 +37,7 @@ const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
     params.set('sortBy', column);
     params.set('orderBy', newSortOrder);
     router.replace(`${pathname}?${params.toString()}`);
+    router.refresh();
   };
 
   return (

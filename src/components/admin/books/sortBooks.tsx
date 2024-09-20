@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import { Router } from "lucide-react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -9,18 +10,20 @@ export default function SortBooks() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-
-  const handleFilterOptionChange = (e:any) => {
+  const router = useRouter();
+  
+  const handleFilterOptionChange = (e: any) => {
     const selectedFilter = e.target.value;
-    console.log(selectedFilter)
+    console.log(selectedFilter);
     const params = new URLSearchParams(searchParams);
-    params.set('page', '1'); 
+    params.set("page", "1");
     if (selectedFilter) {
-      params.set('sortBy', selectedFilter); 
+      params.set("sortBy", selectedFilter);
     } else {
-      params.delete('sortBy');
+      params.delete("sortBy");
     }
     replace(`${pathname}?${params.toString()}`);
+    router.refresh();
   };
 
   return (
