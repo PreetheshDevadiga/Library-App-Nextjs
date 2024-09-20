@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function FilterTransaction() {
-  const statuses = ["All", "pending", "returned", "issued", "rejected"];
+  const statuses = ["All", "Pending", "Returned", "Issued", "Rejected"];
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();

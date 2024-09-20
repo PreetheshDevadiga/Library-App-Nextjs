@@ -642,7 +642,7 @@ export async function fetchBorrowedBook() {
       .where(
         and(
           eq(TransactionTable.memberId, currentMember.userDetails.id),
-          eq(TransactionTable.status, "Issued")
+          eq(TransactionTable.status, "")
         )
       );
 
