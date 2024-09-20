@@ -25,6 +25,7 @@ export default function PaginationControls({totalBooks,limit}:PaginationControls
     const handlePageChange = (pageNumber: number | string) => {
       const url = createPageURL(pageNumber);
       router.push(url);
+      router.refresh();
     };
     return (
       <div className="flex items-center justify-center mt-8 space-x-2 ">
