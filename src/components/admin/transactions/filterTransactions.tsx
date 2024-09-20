@@ -9,6 +9,7 @@ export default function FilterTransaction() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const router = useRouter();
   
   // State to keep track of the selected filter
   const [selectedFilter, setSelectedFilter] = useState<string>(searchParams.get("filter") as string);
@@ -19,6 +20,7 @@ export default function FilterTransaction() {
   }, [searchParams]);
 
   const handleFilterOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    router.refresh();
     const selectedValue = e.target.value;
     setSelectedFilter(selectedValue);
     
