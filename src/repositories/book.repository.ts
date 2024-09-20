@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { asc, count, desc, eq, like, or, sql } from "drizzle-orm";
+import { asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { IPageRequest, IPagedResponse } from "./pagination.response";
 import { IRepository } from "./repository";
@@ -108,8 +108,9 @@ export class BookRepository implements IRepository<IBookBase, IBook> {
       const search = params.search?.toLowerCase();
       const whereExpression = search
         ? or(
-            like(BooksTable.title, `%${search}%`),
-            like(BooksTable.isbnNo, `%${search}%`)
+            ilike(BooksTable.title, `%${search}%`),
+            ilike(BooksTable.isbnNo, `%${search}%`)
+
           )
         : undefined;
           if(sortBy==="all"){
