@@ -5,66 +5,89 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { IMember } from "../../models/member.model";
 
-export function EditProfileForm({userInformation}:{userInformation:IMember|undefined}) {
+export function EditProfileForm({
+  userInformation,
+}: {
+  userInformation: IMember | undefined;
+}) {
   return (
-    <form className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="firstName" className="text-gray-700">
-            First Name
-          </Label>
-          <Input
-            id="firstName"
-            defaultValue={userInformation?.firstName}
-            className="bg-gradient-to-r from-gray-100 to-gray-200 border-gray-300 focus:border-[#2c3e50] focus:ring-[#2c3e50]"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="lastName" className="text-gray-700">
-            Last Name
-          </Label>
-          <Input
-            id="lastName"
-            defaultValue={userInformation?.lastName}
-            className="bg-gradient-to-r from-gray-100 to-gray-200 border-gray-300 focus:border-[#2c3e50] focus:ring-[#2c3e50]"
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="phoneNumber" className="text-gray-700">
-            Phone Number
-          </Label>
-          <Input
-            id="phoneNumber"
-            defaultValue={userInformation?.phone ?? ""}
-            className="bg-gradient-to-r from-gray-100 to-gray-200 border-gray-300 focus:border-[#2c3e50] focus:ring-[#2c3e50]"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email" className="text-gray-700">
-            Email
-          </Label>
-          <Input
-            id="email"
-            defaultValue={userInformation?.email}
-            className="bg-gradient-to-r from-gray-100 to-gray-200 border-gray-300 focus:border-[#2c3e50] focus:ring-[#2c3e50]"
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="address" className="text-gray-700">
-          Address
-        </Label>
-        <Textarea
-          id="address"
-          defaultValue={userInformation?.address}
-          className="bg-gradient-to-r from-gray-100 to-gray-200 border-gray-300 focus:border-[#2c3e50] focus:ring-[#2c3e50]"
-        />
-      </div>
-      <Button className="w-full bg-gradient-to-r from-[#bdc3c7] to-[#2c3e50] hover:from-gray-400 hover:to-gray-600 text-white">
-        Save Changes
-      </Button>
-    </form>
+    <form className="space-y-4 md:space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName" className="text-sm font-medium">
+                First Name
+              </Label>
+              <Input
+                id="firstName"
+                name="firstName"
+                defaultValue={userInformation?.firstName}
+                type="text"
+                placeholder="First Name"
+                required
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastName" className="text-sm font-medium">
+                Last Name
+              </Label>
+              <Input
+                id="lastName"
+                name="lastName"
+                defaultValue={userInformation?.lastName}
+                type="text"
+                placeholder="Last Name"
+                required
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-sm font-medium">
+                Phone Number
+              </Label>
+              <Input
+                id="phone"
+                name="phone"
+                defaultValue={userInformation?.phone ?? ""}
+                type="tel"
+                placeholder="Phone Number"
+                required
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="address" className="text-sm font-medium">
+                Address
+              </Label>
+              <Input
+                id="address"
+                name="address"
+                defaultValue={userInformation?.address}
+                type="text"
+                placeholder="Address"
+                required
+                className="w-full"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                defaultValue={userInformation?.email}
+                type="email"
+                placeholder="Email"
+                required
+                className="w-full"
+              />
+            </div>
+           
+          </div>
+          <Button className="w-full mt-4 md:mt-6" type="submit">
+            Save Changes
+          </Button>
+        </form>
   );
 }
