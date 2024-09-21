@@ -15,7 +15,7 @@ import { AproveTransactionButton } from "../../../components/admin/transactions/
 import { RejectRequestButton } from "../../../components/admin/transactions/rejectRequest";
 import FilterTransaction from "@/components/admin/transactions/filterTransactions";
 import { Badge } from "@/components/ui/badge";
-import { ReturnBookButton } from "@/components/home/returnBookButton"
+import { ReturnBookButton } from "@/components/admin/transactions/returnBookButton"
 
 async function TransactionTable({
   searchParams,
@@ -90,7 +90,7 @@ async function TransactionTable({
                   <TableCell className="text-center">{getStatusBadge(transaction.status)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-center space-x-2">
-                    <ReturnBookButton bookId={transaction.bookId} bookTitle={transaction.title!} />
+                    <ReturnBookButton bookId={transaction.bookId} bookTitle={transaction.title!} transactionStatus={transaction.status}/>
                     <AproveTransactionButton transaction={transaction} bookTitle={transaction.title}/>
                     <RejectRequestButton transaction={transaction} bookTitle={transaction.title}/>
                       <DeleteTransaction

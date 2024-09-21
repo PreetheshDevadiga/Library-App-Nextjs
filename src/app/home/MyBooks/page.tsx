@@ -8,7 +8,6 @@ import {
   TableCell,
 } from "../../../components/ui/table";
 import { fetchBorrowedBook } from "../../../lib/action";
-import { ReturnBookButton } from "@/components/home/returnBookButton"
 
 export default async function MyBooks() {
   let booksList;
@@ -52,9 +51,6 @@ export default async function MyBooks() {
                 </TableCell>
                 <TableCell>
                     {book.dueDate}
-                </TableCell>
-                <TableCell className="text-center">
-                  <ReturnBookButton bookId={book.bookId} bookTitle={book.title} />
                 </TableCell>
               </TableRow>
             ))}

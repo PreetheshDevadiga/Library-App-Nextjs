@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button"
+import { Button } from "../../ui/button"
 import { BookUp } from "lucide-react";
-import { returnBook } from "@/lib/action"
+import { returnBook } from "../../../lib/action"
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -13,14 +13,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "../../ui/dialog"
 
 interface ReturnBookProps {
   bookId: number;
   bookTitle: string;
+  transactionStatus:string;
 }
 
-export function ReturnBookButton({ bookId, bookTitle }: ReturnBookProps) {
+export function ReturnBookButton({ bookId, bookTitle,transactionStatus }: ReturnBookProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const handleReturn = async () => {
@@ -29,10 +30,12 @@ export function ReturnBookButton({ bookId, bookTitle }: ReturnBookProps) {
     router.refresh();
   };
 
+  const isDisabled = transactionStatus !== "issued";
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-blue-500 hover:text-blue-700 hover:bg-blue-100">
+        <Button variant="ghost" size="sm" className={`text-blue-500 hover:text-blue-700 hover:bg-blue-100 ${isDisabled ? 'hidden' : ''}`}>
           <BookUp className="h-4 w-4 mr-2" />
           Return
         </Button>
