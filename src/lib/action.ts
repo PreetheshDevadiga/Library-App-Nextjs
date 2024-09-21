@@ -1,6 +1,6 @@
 "use server";
 
-import { IMember, IMemberBase, memberBaseSchema } from "@/models/member.model";
+import { IMember, IMemberBase, memberBaseSchema,editMemberSchema } from "@/models/member.model";
 import { BookRepository } from "@/repositories/book.repository";
 import { MemberRepository } from "@/repositories/member.repository";
 import { TransactionRepository } from "@/repositories/transaction.repository";
@@ -480,6 +480,48 @@ export async function updateMemberRole(id:number,role:string){
   }
    
   
+}
+
+export async function editMember(prevState: State, formData: FormData) {
+  const userData = await fetchUserDetails();
+  const role: string | undefined= userData?.userDetails.role;
+  const validateFields = editMemberSchema.safeParse({
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    phone: Number(formData.get("phone")),
+    address: formData.get("address"),
+    email: formData.get("email"),
+    role:role,
+  });
+
+  if (!validateFields.success) {
+    console.log("Failure");
+    console.log(validateFields.error.flatten().fieldErrors);
+    return {
+      errors: validateFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Update details.",
+    };
+  }
+
+  const { firstName, lastName, phone, address, email } =
+    validateFields.data;
+
+  if (!firstName || !lastName || !phone || !address || !email) {
+    console.log("All fields are required");
+    return { message: "All Fields are required" };
+  }
+  try {
+    const existingUser = await memberRepo.getByEmail(email);
+    const editedMember = await memberRepo.update(
+      existingUser!.id,
+      validateFields.data
+    );
+    console.log(`Member ${editedMember!.firstName} edited successfully!`);
+    return { message: "Success" };
+  } catch (error) {
+    console.log("Error during editing profile:", error);
+    return { message: "Error during editing profile:", error };
+  }
 }
 
 // Transaction Operations

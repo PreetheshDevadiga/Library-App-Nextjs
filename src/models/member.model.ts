@@ -55,5 +55,10 @@ export const memberSchema = memberBaseSchema.extend({
   refreshToken: z.union([z.string(), z.null()]),
 });
 
+export const editMemberSchema = memberBaseSchema.omit({
+  password: true,
+});
+
+
 export type IMemberBase = z.infer<typeof memberBaseSchema>;
 export type IMember = z.infer<typeof memberSchema>;

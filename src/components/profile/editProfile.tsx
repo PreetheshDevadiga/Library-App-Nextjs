@@ -11,10 +11,10 @@ export default function EditProfile({userInformation}:{userInformation:IMember|u
         <div className="flex items-center space-x-4">
           <Avatar className="w-16 h-16 border-2 border-white">
             <AvatarImage src="/placeholder.svg?height=64&width=64" alt="Profile picture" />
-            <AvatarFallback>PD</AvatarFallback>
+            <AvatarFallback>{userInformation?.firstName.charAt(0)} {userInformation?.lastName.charAt(0)}</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold text-white">{ userInformation?.firstName } </h1>
+            <h1 className="text-2xl font-bold text-white">{ userInformation?.firstName } {userInformation?.lastName}</h1>
             <p className="text-gray-200">{userInformation?.email}</p>
           </div>
         </div>
