@@ -71,7 +71,7 @@ async function TransactionTable({
               <TableHead>Borrow Date</TableHead>
               <TableHead>Due Date</TableHead>
               <TableHead>Return Date</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead className="text-center">Status</TableHead>
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>

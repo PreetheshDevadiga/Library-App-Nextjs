@@ -718,16 +718,13 @@ export async function returnBook(bookId: number) {
     if (!currentMember) {
       throw new Error("User details not found");
     }
-
+    if (currentMember.userDetails.role==="user") {
+      throw new Error("Only admins can return books");
+    }
     const transactionId = await db
       .select({ id: TransactionTable.id })
       .from(TransactionTable)
-      .where(
-        and(
-          eq(TransactionTable.bookId, bookId),
-          eq(TransactionTable.memberId, currentMember.userDetails.id)
-        )
-      )
+      .where(eq(TransactionTable.bookId, bookId))
       .execute();
 
     if (transactionId.length === 0) {
