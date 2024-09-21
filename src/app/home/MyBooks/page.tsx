@@ -38,7 +38,7 @@ export default async function MyBooks() {
               <TableHead>Author</TableHead>
               <TableHead>Issue Date</TableHead>
               <TableHead>Due Date</TableHead>
-              <TableHead className="text-center">Action</TableHead>
+              {/* <TableHead className="text-center">Action</TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>

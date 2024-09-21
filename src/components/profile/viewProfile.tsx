@@ -10,6 +10,7 @@ import Image from "next/image";
 import { fetchUserDetails } from "../../lib/action";
 import React from "react";
 import { IMember } from "../../models/member.model";
+import Link from "next/link";
 
 export default async function UserProfile() {
   const userProfileDetails = await fetchUserDetails();
@@ -20,22 +21,28 @@ export default async function UserProfile() {
   const userImage = userProfileDetails?.user?.image;
 
   const fullName =
-    `${userRegisteredWithCredentials?.firstName} ${
-      userRegisteredWithCredentials?.lastName
-    }` || userRegisteredWithGoogle?.name;
+    `${userRegisteredWithCredentials?.firstName} ${userRegisteredWithCredentials?.lastName}` ||
+    userRegisteredWithGoogle?.name;
+
+  const path =
+    userRegisteredWithCredentials?.role === "admin"
+      ? "/admin/editprofile"
+      : "/home/editprofile";
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl bg-white shadow-2xl rounded-3xl overflow-hidden">
         <div className="relative h-48 bg-gradient-to-r from-[#bdc3c7] to-[#2c3e50]">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white"
-          >
-            <Edit2 className="h-4 w-4 mr-2" />
-            Edit Profile
-          </Button>
+          <Link href={path}>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white"
+            >
+              <Edit2 className="h-4 w-4 mr-2" />
+              Edit Profile
+            </Button>
+          </Link>
         </div>
         <CardContent className="p-6 -mt-24">
           <div className="flex flex-col items-center mb-8">
@@ -56,7 +63,7 @@ export default async function UserProfile() {
               </Button>
             </div>
             <h2 className="mt-4 text-3xl font-bold text-gray-800">
-              {fullName ? fullName :""  }
+              {fullName ? fullName : ""}
             </h2>
           </div>
 
