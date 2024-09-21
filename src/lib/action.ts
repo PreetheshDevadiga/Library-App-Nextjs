@@ -664,7 +664,7 @@ export async function fetchBorrowedBook() {
       .where(
         and(
           eq(TransactionTable.memberId, currentMember.userDetails.id),
-          eq(TransactionTable.status, "issued")
+          eq(TransactionTable.status, "Issued")
         )
       );
 

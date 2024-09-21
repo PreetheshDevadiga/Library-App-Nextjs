@@ -30,7 +30,7 @@ export function ReturnBookButton({ bookId, bookTitle,transactionStatus }: Return
     router.refresh();
   };
 
-  const isDisabled = transactionStatus !== "issued";
+  const isDisabled = transactionStatus !== "Issued";
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
