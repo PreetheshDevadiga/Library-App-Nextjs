@@ -14,6 +14,7 @@ import { DeleteTransaction } from "../../../components/admin/transactions/delete
 import { AproveTransactionButton } from "../../../components/admin/transactions/aproveTransaction"
 import { RejectRequestButton } from "../../../components/admin/transactions/rejectRequest";
 import FilterTransaction from "@/components/admin/transactions/filterTransactions";
+import { Badge } from "@/components/ui/badge";
 
 async function TransactionTable({
   searchParams,
@@ -34,6 +35,26 @@ async function TransactionTable({
   const transactionList = transactionResponse?.items || [];
   const totalTransactions =Number(transactionResponse?.pagination.total);
 
+  const getStatusBadge = (status: string) => {
+    type StatusType = 'pending' | 'approved' | 'rejected' | 'returned' | 'overdue';
+
+    const statusColors = {
+      pending: "bg-yellow-500",
+      approved: "bg-green-500",
+      rejected: "bg-red-500",
+      returned: "bg-blue-500",
+      overdue: "bg-purple-500",
+    };
+
+    const statusKey = status.toLowerCase() as StatusType;
+
+    return (
+      <Badge className={`${statusColors[statusKey] || "bg-gray-500"} text-white`}>
+      {status}
+    </Badge>
+    );
+  };
+
   return (
     <div className="container mx-auto">
       <div className="flex justify-end items-center mb-4">
@@ -48,8 +69,8 @@ async function TransactionTable({
               <TableHead>Member Name</TableHead>
               <TableHead>Borrow Date</TableHead>
               <TableHead>Due Date</TableHead>
-              <TableHead>Status</TableHead>
               <TableHead>Return Date</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -64,8 +85,8 @@ async function TransactionTable({
                   <TableCell>{transaction.firstName}</TableCell>
                   <TableCell>{transaction.borrowDate}</TableCell>
                   <TableCell>{transaction.dueDate}</TableCell>
-                  <TableCell>{transaction.status}</TableCell>
                   <TableCell>{transaction.returnDate}</TableCell>
+                  <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-center space-x-2">
                     <AproveTransactionButton transaction={transaction} bookTitle={transaction.title}/>
