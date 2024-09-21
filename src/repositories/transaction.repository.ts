@@ -158,6 +158,7 @@ export class TransactionRepository
       const query = this.db
         .select({
           id: TransactionTable.id,
+          bookId:TransactionTable.bookId,
           title: BooksTable.title,
           firstName: MemberTable.firstName,
           borrowDate: TransactionTable.borrowDate,

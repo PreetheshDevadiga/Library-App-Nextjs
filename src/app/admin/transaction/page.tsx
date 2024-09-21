@@ -15,6 +15,7 @@ import { AproveTransactionButton } from "../../../components/admin/transactions/
 import { RejectRequestButton } from "../../../components/admin/transactions/rejectRequest";
 import FilterTransaction from "@/components/admin/transactions/filterTransactions";
 import { Badge } from "@/components/ui/badge";
+import { ReturnBookButton } from "@/components/home/returnBookButton"
 
 async function TransactionTable({
   searchParams,
@@ -36,11 +37,11 @@ async function TransactionTable({
   const totalTransactions =Number(transactionResponse?.pagination.total);
 
   const getStatusBadge = (status: string) => {
-    type StatusType = 'pending' | 'approved' | 'rejected' | 'returned' | 'overdue';
+    type StatusType = 'pending' | 'issued' | 'rejected' | 'returned' | 'overdue';
 
     const statusColors = {
       pending: "bg-yellow-500",
-      approved: "bg-green-500",
+      issued: "bg-green-500",
       rejected: "bg-red-500",
       returned: "bg-blue-500",
       overdue: "bg-purple-500",
@@ -86,9 +87,10 @@ async function TransactionTable({
                   <TableCell>{transaction.borrowDate}</TableCell>
                   <TableCell>{transaction.dueDate}</TableCell>
                   <TableCell>{transaction.returnDate}</TableCell>
-                  <TableCell>{getStatusBadge(transaction.status)}</TableCell>
+                  <TableCell className="text-center">{getStatusBadge(transaction.status)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-center space-x-2">
+                    <ReturnBookButton bookId={transaction.bookId} bookTitle={transaction.title!} />
                     <AproveTransactionButton transaction={transaction} bookTitle={transaction.title}/>
                     <RejectRequestButton transaction={transaction} bookTitle={transaction.title}/>
                       <DeleteTransaction
