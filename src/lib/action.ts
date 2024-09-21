@@ -15,12 +15,6 @@ import { redirect } from "next/navigation";
 import { cloudinary } from "./cloudinary";
 
 
-// cloudinary.config({
-//   cloud_name:process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-//   api_key:process.env.CLOUDINARY_API_KEY,
-//   api_secret:process.env.CLOUDINARY_API_SECRET,
-// })
-
 const memberRepo = new MemberRepository(db);
 
 const bookRepo = new BookRepository(db);
@@ -271,7 +265,7 @@ export async function updateBook(
   prevState: State,
   formData: FormData
 ) {
-  const validateFields = bookBaseSchema.safeParse({
+  const validateFields = newBookBaseSchema.safeParse({
     title: formData.get("title"),
     author: formData.get("author"),
     publisher: formData.get("publisher"),
@@ -338,8 +332,8 @@ export async function deleteBook(id: number) {
     console.log(`Book ${result?.title} deleted successfully!`);
     return { message: "Success" };
   } catch (error) {
-    console.log("Error during book update:", error);
-    return { message: "Error during book update.", error };
+    console.log("Error during book deletion:", error);
+    return { message: "Error during book deletion.", error };
   }
 }
 
@@ -458,6 +452,34 @@ export async function addNewMember(prevState: State, formData: FormData) {
 
     return { message: "Error during member registration.", error: error.message };
   }
+}
+
+export async function deleteMember(id: number) {
+  try {
+    console.log(id);
+    const result = await memberRepo.delete(id);
+
+    console.log(`Member ${result?.firstName} deleted successfully!`);
+    return { message: "Success" };
+  } catch (error) {
+    console.log("Error during Member Deletion:", error);
+    return { message: "Error during Member Deletion.", error };
+  }
+}
+
+export async function updateMemberRole(id:number,role:string){
+
+  console.log(id,role)
+  try{
+    await memberRepo.update(id,{role:role});
+    console.log("success");
+
+  }catch(error){
+    console.log("Error during Member Update:", error);
+    return { message: "Error during Member Update."};
+  }
+   
+  
 }
 
 // Transaction Operations

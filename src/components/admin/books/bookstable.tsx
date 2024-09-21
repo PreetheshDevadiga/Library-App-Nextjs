@@ -64,7 +64,7 @@ const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
             <TableHead>Available Copies</TableHead>
             <TableHead>Genre</TableHead>
             <TableHead>Price</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-center">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -81,7 +81,7 @@ const BooksTable = ({ booksList, totalBooks, query }: BooksTableProps) => {
                 <TableCell>{book.genre}</TableCell>
                 <TableCell>{book.price}</TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end space-x-2">
+                  <div className="flex justify-end space-x-1">
                     <EditBook id={book.id} />
                     <DeleteBook bookId={book.id} bookTitle={book.title} />
                   </div>

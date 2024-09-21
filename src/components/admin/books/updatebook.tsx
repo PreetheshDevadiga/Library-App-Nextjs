@@ -40,6 +40,7 @@ export function UpdateBookForm({ book }: { book: IBook }) {
   useEffect(() => {
     if (state.message === "Success") {
       toast({
+
         title: "Book Updated",
         description: "The book has been successfully updated.",
         className: "bg-green-500",
@@ -47,16 +48,19 @@ export function UpdateBookForm({ book }: { book: IBook }) {
       });
       router.push("/admin/books");
     }
-    else if (state.message && state.message !== "Success") {
-      toast({
-        title: "Error Updating Book",
-        description: state.message || "There was an issue updating the book. Please try again.",
-        className: "bg-red-500",
-        duration: 2000,
-      });
-    }
-  
+     
   }, [state, router, toast]);
+
+  // if (state.errors) {
+  //   console.log("else if",state.message);
+  //   toast({
+  //     title: "Error Updating Book",
+  //     description:"There was an issue updating the book. Please try again.",
+  //     className: "bg-red-500",
+  //     duration: 2000,
+  //   });
+  // }
+
 
   return (
     <Card className="w-full max-w-2xl mx-auto">

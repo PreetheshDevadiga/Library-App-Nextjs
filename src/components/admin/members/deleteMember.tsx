@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "../../../components/ui/button"
 import { TrashIcon } from "lucide-react";
-import { deleteBook } from "../../../lib/action"
+import { deleteMember } from "../../../lib/action"
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -20,7 +20,7 @@ export function DeleteMember({ memberId, memberName }: { memberId: number; membe
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDelete = async () => {
-    await deleteBook(memberId);
+    await deleteMember(memberId);
     setIsOpen(false);
     router.refresh();
   };
@@ -28,7 +28,7 @@ export function DeleteMember({ memberId, memberName }: { memberId: number; membe
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="destructive" size="sm">
           <TrashIcon className="h-4 w-4" />
         </Button>
       </DialogTrigger>

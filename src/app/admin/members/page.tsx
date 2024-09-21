@@ -12,6 +12,7 @@ import { SearchBar } from "../../../components/home/search"
 import PaginationControls from '../../../components/home/pagination';
 import { DeleteMember } from '../../../components/admin/members/deleteMember';
 import { AddMember } from '../../../components/admin/members/addMember';
+import  RoleDropdown  from "@/components/admin/members/roleDropDown"
 
 async function MemberTable({
   searchParams,
@@ -45,7 +46,7 @@ async function MemberTable({
               <TableHead>Phone</TableHead>
               <TableHead>Address</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -57,10 +58,11 @@ async function MemberTable({
                   <TableCell>{member.phone}</TableCell>
                   <TableCell>{member.address}</TableCell>
                   <TableCell>{member.email}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-center">
                     <div className="flex justify-end space-x-2">
+                    <RoleDropdown memberId={member.id} memberRole={member.role}/>
                         <DeleteMember memberId={member.id} memberName={`${member.firstName} ${member.lastName}`}/>
-                      
+                        
                     </div>
                   </TableCell>
                 </TableRow>
