@@ -2,15 +2,15 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, Users, Calendar, BookMarked } from "lucide-react";
 import Link from "next/link";
 
-export default function LandingPage() {
+export default function Component() {
   return (
     <div className="min-h-screen bg-[#0A2540] text-white font-sans">
       <header className="container mx-auto px-6 py-8 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <div className="bg-[#00D4FF] p-2 rounded-lg">
-            <BookOpen className="h-8 w-8 text-[#0A2540] " />
+            <BookOpen className="h-8 w-8 text-[#0A2540]" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-1">BookShelf</h1>
+          <h1 className="text-3xl font-bold text-white">BookShelf</h1>
         </div>
       </header>
 
