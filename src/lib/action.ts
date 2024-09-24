@@ -696,6 +696,7 @@ export async function fetchBorrowedBook() {
         id: TransactionTable.id,
         bookId: BooksTable.id,
         title: BooksTable.title,
+        imageUrl:BooksTable.imageUrl,
         author: BooksTable.author,
         borrowDate: TransactionTable.borrowDate,
         dueDate: TransactionTable.dueDate,

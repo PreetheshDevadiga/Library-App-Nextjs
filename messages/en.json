@@ -1,0 +1,160 @@
+{
+  "LocaleSwitcher": {
+    "en": "English",
+    "kn": "ಕನ್ನಡ",
+    "label": "Language"
+  },
+  "LandingPage": {
+    "header": {
+      "title": "BookShelf"
+    },
+    "main": {
+      "hero": {
+        "headline": "Your Digital BookShelf",
+        "description": "Discover the joy of effortless library management with our intuitive system.",
+        "signUp": "Sign Up",
+        "login": "Login"
+      },
+      "features": {
+        "headline": "Key Features",
+        "feature1": {
+          "title": "Efficient Cataloging",
+          "description": "Easily organize and categorize your entire book collection with our intuitive system."
+        },
+        "feature2": {
+          "title": "User-Friendly Interface",
+          "description": "Manage library members and their activities with our sleek, easy-to-use dashboard."
+        },
+        "feature3": {
+          "title": "Smart Reservations",
+          "description": "Streamline book reservations and due date management with automated reminders."
+        }
+      }
+    },
+    "footer": {
+      "title": "BookShelf",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "contact": "Contact",
+      "copyright": "© 2024 BookShelf. All rights reserved."
+    }
+  },
+  "registerForm": {
+    "title": "Join us today!",
+    "description": "Sign up now to become a member.",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Doe",
+    "phone": "Phone",
+    "phonePlaceholder": "9087654321",
+    "email": "Email",
+    "emailPlaceholder": "john@example.com",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "signUpButton": "Sign Up",
+    "signUpSuccessTitle": "Sign Up Successful",
+    "signUpSuccessDescription": "Welcome! You have successfully registered.",
+    "signUpFailureTitle": "Sign Up Failed",
+    "signUpFailureDescription": "There was an error during registration. Please try again.",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginLinkText": "Log in",
+    "orContinueWith": "Or continue with",
+    "errorMessage": {
+      "firstName": "First Name is required",
+      "lastName": "Last Name is required",
+      "phone": "Phone number is required",
+      "email": "Email is required",
+      "password": "Password is required",
+      "confirmPassword": "Confirm Password is required",
+      "genericError": "There was an error during registration."
+    }
+  },
+  "SignInForm": {
+    "signInTitle": "Sign in to Bookshelf",
+    "emailLabel": "Email",
+    "emailPlaceholder": "name@example.com",
+    "passwordLabel": "Password",
+    "signingIn": "Signing In...",
+    "signInButton": "Sign In",
+    "noAccountMessage": "Don't have an account?",
+    "signUpLink": "Sign up",
+    "orContinueWith": "Or continue with"
+  },
+  "navbar": {
+    "title": "BookShelf",
+    "allBooks": "All Books",
+    "myBooks": "My Books",
+    "myRequest": "My Request"
+  },
+  "bookCard": {
+    "borrow": "Borrow",
+    "currencySymbol": "$",
+    "borrowSuccess": "Borrowing Successful",
+    "borrowSuccessMessage": "The book has been successfully borrowed.",
+    "error": "Error",
+    "borrowErrorMessage": "Failed to borrow the book. Please try again."
+  },
+  "searchBar": {
+    "placeholderBooks": "Search books...",
+    "placeholderMembers": "Search members...",
+    "placeholderDefault": "Search..."
+  },
+  "sortBooks": {
+    "all": "All",
+    "title": "Title",
+    "author": "Author"
+  },
+  "myBooks": {
+    "noBooksMessage": "You haven't borrowed any books yet.",
+    "title": "My Borrowed Books",
+    "borrowedLabel": "Borrowed:",
+    "dueLabel": "Due:"
+  },
+  "requests": {
+    "bookRequests": "Book Requests",
+    "noRequestsMessage": "No requests found.",
+    "title": "Title",
+    "author": "Author",
+    "status": "Status"
+  },
+  "logout":{
+    "logOut": "Log Out"
+  },
+  "viewprofile":{
+    "viewprofile":"View Profile",
+    "editProfile": "Edit Profile",
+    "profilePictureAlt": "Profile Picture",
+    "noName": "No Name Provided",
+    "contactInfo": "Contact Info",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "noData": "No Data Available",
+    "libraryActivity": "Library Activity",
+    "booksBorrowed": "Books Borrowed",
+    "currentlyOnLoan": "3 currently on loan",
+    "readingHours": "Reading Hours",
+    "last30Days": "Last 30 days",
+    "favoriteGenre": "Favorite Genre",
+    "basedOnHistory": "Based on borrowing history"
+  },
+  "EditProfileForm": {
+    "toast": {
+      "successTitle": "Success",
+      "successDescription": "Member details updated successfully from the library."
+    },
+    "form": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "phone": "Phone Number",
+      "email": "Email",
+      "address": "Address",
+      "saveChanges": "Save Changes"
+    },
+    "EditProfile": {
+      "profilePictureAlt": "Profile picture",
+      "personalInformationTitle": "Personal Information"
+    }
+  }
+}

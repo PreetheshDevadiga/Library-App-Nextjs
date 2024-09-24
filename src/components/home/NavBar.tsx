@@ -1,52 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import clsx from "clsx";
 import { ProfileDropDown } from "../profile/profiledropDownUser";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Menu } from "lucide-react";
+import { Button } from "../ui/button";
 
 export const NavBar = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();
 
   return (
-    <nav className="bg-white sticky top-0 shadow-md  text-black p-4 z-50">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex flex-row items-center gap-2">
-        <BookOpen className="h-8 w-8 text-primary" />
-        <h1 className="text-3xl font-bold">BookShelf</h1>
-        </div>    
-        <div className="flex flex-row justify-center items-center gap-4">
-          <div className="hidden md:flex space-x-4">
-            <Link
-              className={clsx("hover:text-blue-200", {
-                "text-blue-600": pathname === "/home",
-              })}
-              href="/home"
-            >
-              All Books
-            </Link>
-            <Link
-              className={clsx("hover:text-blue-200", {
-                "text-blue-600": pathname === "/home/MyBooks",
-              })}
-              href="/home/MyBooks"
-            >
-              My Books
-            </Link>
-            <Link
-              className={clsx("hover:text-blue-200", {
-                "text-blue-600": pathname === "/home/Request",
-              })}
-              href="/home/Request"
-            >
-              My Request
-            </Link>
-          </div>
+    <nav className="bg-[#0D2E4B] sticky top-0 shadow-lg text-white p-4 z-50">
+      <div className="container mx-auto flex justify-end items-center">
+        <div className="flex items-center space-x-4">
           <ProfileDropDown>{children}</ProfileDropDown>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden text-[#A3B8CC] hover:text-white transition-colors duration-200"
+          >
+          </Button>
         </div>
       </div>
     </nav>
   );
 };
+

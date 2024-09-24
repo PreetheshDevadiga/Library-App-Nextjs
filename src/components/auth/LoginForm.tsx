@@ -15,12 +15,15 @@ import { Input } from "../ui/input";
 import { useActionState } from "react";
 import { authenticate } from "@/lib/action";
 import { AlertCircle, BookOpen } from "lucide-react";
+import { useTranslations } from 'next-intl'; 
 
 export const LoginForm = ({ children }: { children: React.ReactNode }) => {
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
     undefined
   );
+
+  const t = useTranslations("SignInForm");
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#0A2540]">
@@ -33,25 +36,25 @@ export const LoginForm = ({ children }: { children: React.ReactNode }) => {
               </div>
             </div>
             <CardTitle className="text-3xl font-bold text-center text-[#0A2540]">
-              Sign in to Bookshelf
+              {t("signInTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <form action={formAction} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-[#0A2540] font-medium">Email</Label>
+                  <Label htmlFor="email" className="text-[#0A2540] font-medium">{t("emailLabel")}</Label>
                   <Input
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="name@example.com"
+                    placeholder={t("emailPlaceholder")}
                     required
                     className="border-[#A3B8CC] focus:border-[#00D4FF] focus:ring-[#00D4FF]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-[#0A2540] font-medium">Password</Label>
+                  <Label htmlFor="password" className="text-[#0A2540] font-medium">{t("passwordLabel")}</Label>
                   <Input
                     id="password"
                     name="password"
@@ -72,16 +75,16 @@ export const LoginForm = ({ children }: { children: React.ReactNode }) => {
                   type="submit"
                   disabled={isPending}
                 >
-                  {isPending ? "Signing In..." : "Sign In"}
+                  {isPending ? t("signingIn") : t("signInButton")}
                 </Button>
               </div>
               <div className="text-sm text-[#4F5E74] text-center">
-                <span className="mr-1">Don&apos;t have an account?</span>
+                <span className="mr-1">{t("noAccountMessage")}</span>
                 <Link
                   className="text-[#0A2540] font-medium underline hover:underline transition-colors"
                   href="/signup"
                 >
-                  Sign up
+                  {t("signUpLink")}
                 </Link>
               </div>
             </form>
@@ -90,7 +93,7 @@ export const LoginForm = ({ children }: { children: React.ReactNode }) => {
             <div className="w-full flex items-center">
               <div className="flex-grow border-t border-[#A3B8CC]" />
               <span className="px-4 bg-white text-[#4F5E74] text-sm">
-                Or continue with
+                {t("orContinueWith")}
               </span>
               <div className="flex-grow border-t border-[#A3B8CC]" />
             </div>

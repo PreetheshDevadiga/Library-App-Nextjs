@@ -4,6 +4,8 @@ import { useToast } from "@/components/use-toast";
 import { requestBook } from "@/lib/action";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from 'next-intl';
+import React from 'react';
 
 interface BorrowBookProps {
   memberId: number;
@@ -13,30 +15,29 @@ interface BorrowBookProps {
 export default function BorrowBook({ memberId, bookId }: BorrowBookProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const t = useTranslations('bookCard');
 
-  const handleBorrow = async (e:React.MouseEvent) => {
+  const handleBorrow = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      
       const result = await requestBook(memberId, bookId);
+
       if (result) {
         toast({
-          title: "Borrowing Successful",
-          description: "The book has been successfully borrowed.",
+          title: t('borrowSuccess'),
+          description: t('borrowSuccessMessage'),
           duration: 2000,
           className: "bg-green-500 text-white",
         });
-        setTimeout(() => {
-          router.push("/home");
-        }, 2000);
+        router.push("/home");
       } else {
         throw new Error("Failed to borrow book");
       }
     } catch (error) {
       console.error("Failed to borrow the book:", error);
       toast({
-        title: "Error",
-        description: "Failed to borrow the book. Please try again.",
+        title: t('error'), // use translation key for error
+        description: t('borrowErrorMessage'),
         variant: "destructive",
         duration: 2000,
       });
@@ -44,7 +45,8 @@ export default function BorrowBook({ memberId, bookId }: BorrowBookProps) {
   };
 
   return (
-      <Button onClick={handleBorrow}>Borrow</Button>
-
+    <Button onClick={handleBorrow}>
+      {t('borrow')}
+    </Button>
   );
 }

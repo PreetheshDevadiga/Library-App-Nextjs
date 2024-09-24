@@ -5,7 +5,7 @@ import { AddBook } from "../../components/home/addbook";
 import { fetchBooks } from "../../lib/action";
 import PaginationControls from "../../components/home/pagination";
 import BooksTable from "../../components/admin/books/bookstable";
-import { IBook } from "@/models/book.model";
+import { IBook } from "../../models/book.model";
 
 function BookTable({
   searchParams,

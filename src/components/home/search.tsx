@@ -4,14 +4,15 @@ import { Input } from "../ui/input";
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
+import { useTranslations } from 'next-intl';
 
 export function SearchBar() {
+  const t = useTranslations('searchBar');
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
-  const router= useRouter();
+  const router = useRouter();
 
-  const [searchQuery, setSearchQuery] = useState<string | null>(searchParams.get("query"));
+  const [searchQuery, setSearchQuery] = useState<string>(searchParams.get("query") || '');
 
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
@@ -22,39 +23,40 @@ export function SearchBar() {
     } else {
       params.delete('query');
     }
-    
-    replace(`${pathname}?${params.toString()}`);
+
+    router.replace(`${pathname}?${params.toString()}`);
     router.refresh();
   }, 300);
 
   useEffect(() => {
     const currentQuery = searchParams.get("query") || "";
-    setSearchQuery(currentQuery); 
-  }, [searchParams, pathname, replace]);
+    setSearchQuery(currentQuery);
+  }, [searchParams, pathname]);
 
   const getPlaceholder = () => {
-    if (pathname.includes("books")) {
-      return "Search books...";
+    if (pathname.includes("home")) {
+      return t('placeholderBooks');
     } else if (pathname.includes("members")) {
-      return "Search members...";
+      return t('placeholderMembers');
     }
-    return "Search...";
+    return t('placeholderDefault');
   };
 
   return (
-      <div className="relative flex flex-1 flex-shrink-0">
+    <div className="relative flex flex-1 flex-shrink-0">
+      <div className="relative w-full max-w-xs">
         <Input
           type="text"
           placeholder={getPlaceholder()}
-          className="bg-white pl-8 w-full max-w-xs"
-          value={searchQuery || ''}
+          className="w-full bg-gradient-to-br from-gray-900 to-gray-800 text-white placeholder-gray-400 border-none rounded-full pl-12 pr-4 py-3 shadow-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all duration-300 ease-in-out"
+          value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             handleSearch(e.target.value);
           }}
         />
-        {/* <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
       </div>
-
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full opacity-20 blur-xl pointer-events-none"></div>
+    </div>
   );
 }

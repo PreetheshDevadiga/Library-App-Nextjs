@@ -1,0 +1,165 @@
+{
+  "LocaleSwitcher": {
+    "en": "English",
+    "kn": "ಕನ್ನಡ",
+    "label": "Language"
+  },
+  "LandingPage": {
+    "header": {
+      "title": "ಪುಸ್ತಕಕೈಪಿಡಿ"
+    },
+    "main": {
+      "hero": {
+        "headline": "ನಿಮ್ಮ ಡಿಜಿಟಲ್ ಪುಸ್ತಕಕೈಪಿಡಿ",
+        "description": "ನಮ್ಮ ಸುಲಭ ನಿರ್ವಹಣಾ ವ್ಯವಸ್ಥೆಯಿಂದ ಗ್ರಂಥಾಲಯ ನಿರ್ವಹಣೆಯ ಆನಂದವನ್ನು ಅನುಭವಿಸಿ.",
+        "signUp": "ನೊಂದಣಿ ಮಾಡಿ",
+        "login": "ಲಾಗಿನ್"
+      },
+      "features": {
+        "headline": "ಮುಖ್ಯ ವೈಶಿಷ್ಟ್ಯಗಳು",
+        "feature1": {
+          "title": "ಕಾರ್ಯಕ್ಷಮ ಗ್ರಂಥಾಲಯ",
+          "description": "ನಮ್ಮ ಸುಲಭ ನಿರ್ವಹಣಾ ವ್ಯವಸ್ಥೆಯಿಂದ ನಿಮ್ಮ ಎಲ್ಲಾ ಪುಸ್ತಕಗಳನ್ನು ಸುಲಭವಾಗಿ ಸಂಗ್ರಹಿಸಿ ಮತ್ತು ವರ್ಗೀಕರಿಸಿ."
+        },
+        "feature2": {
+          "title": "ಬಳಕೆದಾರ ಸ್ನೇಹಿ ಇಂಟರ್ಫೇಸ್",
+          "description": "ಗ್ರಂಥಾಲಯ ಸದಸ್ಯರು ಮತ್ತು ಅವರ ಚಟುವಟಿಕೆಗಳನ್ನು ನಿರ್ವಹಿಸಲು ಸುಲಭ ಡ್ಯಾಶ್ಬೋರ್ಡ್ ಬಳಸಿ."
+        },
+        "feature3": {
+          "title": "ಸ್ಮಾರ್ಟ್ ರಿಸರ್ವೇಶನ್",
+          "description": "ಪುಸ್ತಕ ಮೀಸಲಾತಿ ಮತ್ತು ದಿನಾಂಕ ನಿರ್ವಹಣೆಯನ್ನು ಸ್ವಯಂಚಾಲಿತ ಮುನ್ಸೂಚನೆಗಳೊಂದಿಗೆ ಸುಧಾರಿಸಿ."
+        }
+      }
+    },
+    "footer": {
+      "title": "ಪುಸ್ತಕಕೈಪಿಡಿ",
+      "privacyPolicy": "ಗೌಪ್ಯತಾ ನೀತಿ",
+      "termsOfService": "ಸೇವಾ ನಿಯಮಗಳು",
+      "contact": "ಸಂಪರ್ಕ",
+      "copyright": "© 2024 ಪುಸ್ತಕಕೈಪಿಡಿ. ಎಲ್ಲಾ ಹಕ್ಕುಗಳು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ."
+    }
+  },
+
+  "registerForm": {
+    "title": "ನಮ್ಮೊಂದಿಗೆ ಇಂದು ಸೇರಿ!",
+    "description": "ಸದಸ್ಯನಾಗಲು ಈಗಲೇ ಸೈನ್ ಅಪ್ ಮಾಡಿ.",
+    "firstName": "ಮೊದಲ ಹೆಸರು",
+    "firstNamePlaceholder": "ಜಾನ್",
+    "lastName": "ಕೊನೆಯ ಹೆಸರು",
+    "lastNamePlaceholder": "ಡೋ",
+    "phone": "ದೂರವಾಣಿ",
+    "phonePlaceholder": "9087654321",
+    "email": "ಇಮೇಲ್",
+    "emailPlaceholder": "john@example.com",
+    "password": "ಪಾಸ್ವರ್ಡ್",
+    "confirmPassword": "ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
+    "signUpButton": "ಸೈನ್ ಅಪ್",
+    "signUpSuccessTitle": "ಸೈನ್ ಅಪ್ ಯಶಸ್ವಿಯಾಗಿದೆ",
+    "signUpSuccessDescription": "ಸ್ವಾಗತ! ನೀವು ಯಶಸ್ವಿಯಾಗಿ ನೋಂದಾಯಿಸಿದ್ದೀರಿ.",
+    "signUpFailureTitle": "ಸೈನ್ ಅಪ್ ವಿಫಲವಾಗಿದೆ",
+    "signUpFailureDescription": "ನೋಂದಾಯಿಸುವಾಗ ದೋಷವಾಯಿತು. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "alreadyHaveAccount": "ಈಗಾಗಲೇ ಖಾತೆ ಹೊಂದಿದ್ದೀರಾ?",
+    "loginLinkText": "ಲಾಗಿನ್ ಮಾಡಿ",
+    "orContinueWith": "ಅಥವಾ ಮುಂದುವರಿಸಿ",
+    "errorMessage": {
+      "firstName": "ಮೊದಲ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
+      "lastName": "ಕೊನೆಯ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
+      "phone": "ದೂರವಾಣಿ ಸಂಖ್ಯೆಯ ಅಗತ್ಯವಿದೆ",
+      "email": "ಇಮೇಲ್ ಅಗತ್ಯವಿದೆ",
+      "password": "ಪಾಸ್ವರ್ಡ್ ಅಗತ್ಯವಿದೆ",
+      "confirmPassword": "ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸುವುದು ಅಗತ್ಯವಿದೆ",
+      "genericError": "ನೋಂದಾಯಿಸುವಾಗ ದೋಷವಾಯಿತು."
+    }
+  },
+
+  "SignInForm": {
+    "signInTitle": "ಪುಸ್ತಕಕೈಪಿಡಿ ಲಾಗ್ ಇನ್ ಮಾಡಿ",
+    "emailLabel": "ಇಮೇಲ್",
+    "emailPlaceholder": "name@example.com",
+    "passwordLabel": "ಪಾಸ್ವರ್ಡ್",
+    "signingIn": "ಲಾಗ್ ಇನ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+    "signInButton": "ಲಾಗ್ ಇನ್",
+    "noAccountMessage": "ಖಾತೆ ಇಲ್ಲವೇ?",
+    "signUpLink": "ಸೈನ್ ಅಪ್ ಮಾಡಿ",
+    "orContinueWith": "ಅಥವಾ ಇದರಿಂದ ಮುಂದುವರಿಸಿ"
+  },
+
+  "navbar": {
+    "title": "ಪುಸ್ತಕಕೈಪಿಡಿ",
+    "allBooks": "ಎಲ್ಲಾ ಪುಸ್ತಕಗಳು",
+    "myBooks": "ನನ್ನ ಪುಸ್ತಕಗಳು",
+    "myRequest": "ನನ್ನ ವಿನಂತಿಗಳು"
+  },
+  "bookCard": {
+    "borrow": "ಎರವಲು ತೆಗೆದುಕೊ",
+    "currencySymbol": "₹",
+    "borrowSuccess": "ಬುಕ ಧಾರಣೆ ಯಶಸ್ವಿಯಾಗಿದೆ",
+    "borrowSuccessMessage": "ಪುಸ್ತಕವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಎರವಲು ಪಡೆಯಲಾಗಿದೆ",
+    "error": "ದೋಷ",
+    "borrowErrorMessage": "ಪುಸ್ತಕವನ್ನು ಧಾರಣೆ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಪುನಃ ಪ್ರಯತ್ನಿಸಿ."
+  
+  },
+  "searchBar": {
+    "placeholderBooks": "ಪುಸ್ತಕಗಳನ್ನು ಹುಡುಕಿ...",
+    "placeholderMembers": "ಸದಸ್ಯರನ್ನು ಹುಡುಕಿ...",
+    "placeholderDefault": "ಹುಡುಕಿ..."
+  },
+  "sortBooks": {
+    "all": "ಎಲ್ಲಾ",
+    "title": "ಶೀರ್ಷಿಕೆ",
+    "author": "ಲೇಖಕ"
+  },
+  "myBooks": {
+    "noBooksMessage": "ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಪುಸ್ತಕಗಳನ್ನು ಎರವಲು ಪಡೆದಿಲ್ಲ.",
+    "title": "ನನ್ನ ಎರವಲು ಪಡೆದ ಪುಸ್ತಕಗಳು",
+    "borrowedLabel": "ಎರವಲು ಪಡೆದ ದಿನಾಂಕ",
+    "dueLabel": "ಅಂತಿಮ ದಿನಾಂಕ"
+  },
+  "requests":{
+    "bookRequests": "ಪುಸ್ತಕಗಳ ವಿನಂತಿಗಳು",
+    "noRequestsMessage": "ಯಾವುದೇ ವಿನಂತಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ..",
+    "title": "ಶೀರ್ಷಿಕೆ",
+    "author": "ಲೇಖಕರು",
+    "status": "ಸ್ಥಿತಿ"
+  },
+  "logout":{
+    "logOut":"ಲಾಗ್ ಔಟ್ ಮಾಡಿ"
+  },
+  "viewprofile":{
+    "viewprofile":"ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ",
+    "editProfile": "ಪ್ರೊಫೈಲ್ ಸಂಪಾದನೆ",
+    "profilePictureAlt": "ಪ್ರೊಫೈಲ್ ಚಿತ್ರ",
+    "noName": "ಹೆಸರು ನೀಡಲಾಗಿಲ್ಲ",
+    "contactInfo": "ಸಂಪರ್ಕ ಮಾಹಿತಿ",
+    "email": "ಇಮೇಲ್",
+    "phone": "ಫೋನ್",
+    "address": "ವಿಳಾಸ",
+    "noData": "ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ",
+    "libraryActivity": "ಪುಸ್ತಕಾಲಯ ಚಟುವಟಿಕೆ",
+    "booksBorrowed": "ಸಾಲಾ ಪುಸ್ತಕಗಳು",
+    "currentlyOnLoan": "3 ಪಠನೆಯಲ್ಲಿ",
+    "readingHours": "ಓದುವ ಸಮಯ",
+    "last30Days": "ಕಳೆದ 30 ದಿನಗಳು",
+    "favoriteGenre": "ಪ್ರಿಯ ಶೈಲಿ",
+    "basedOnHistory": "ಸಾಲಾ ಇತಿಹಾಸದ ಆಧಾರದ ಮೇಲೆ"
+  },
+  "EditProfileForm": {
+    "toast": {
+      "successTitle": "ಯಶಸ್ಸು",
+      "successDescription": "ಲೈಬ್ರರಿಯಿಂದ ಸದಸ್ಯರ ವಿವರಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ."
+    },
+    "form": {
+      "firstName": "ಮೊದಲ ಹೆಸರು",
+      "lastName": "ಕೊನೆಯ ಹೆಸರು",
+      "phone": "ದೂರವಾಣಿ ಸಂಖ್ಯೆ",
+      "email": "ಇಮೇಲ್",
+      "address": "ವಿಳಾಸ",
+      "saveChanges": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ"
+    },
+    "EditProfile": {
+    "profilePictureAlt": "ಪ್ರೊಫೈಲ್ ಚಿತ್ರ",
+    "personalInformationTitle": "ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ"
+  }
+  }
+}
+

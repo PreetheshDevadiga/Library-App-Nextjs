@@ -7,7 +7,7 @@ import SideBar from "../../components/admin/books/adminSideBar";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className="flex h-screen bg-gray-100">
+      <div className="flex h-screen bg-[#0A2540]">
         <SideBar />
         <div className="flex flex-1 flex-col overflow-hidden">
           <AdminNavBar>

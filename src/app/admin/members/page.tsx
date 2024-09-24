@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Table,
   TableBody,
@@ -6,13 +6,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../../../components/ui/table'
-import { fetchMember } from "../../../lib/action"
-import { SearchBar } from "../../../components/home/search"
-import PaginationControls from '../../../components/home/pagination';
-import { DeleteMember } from '../../../components/admin/members/deleteMember';
-import { AddMember } from '../../../components/admin/members/addMember';
-import  RoleDropdown  from "@/components/admin/members/roleDropDown"
+} from "../../../components/ui/table";
+import { fetchMember } from "../../../lib/action";
+import { SearchBar } from "../../../components/home/search";
+import PaginationControls from "../../../components/home/pagination";
+import { DeleteMember } from "../../../components/admin/members/deleteMember";
+import { AddMember } from "../../../components/admin/members/addMember";
+import RoleDropdown from "../../../components/admin/members/roleDropDown";
 
 async function MemberTable({
   searchParams,
@@ -34,7 +34,6 @@ async function MemberTable({
   return (
     <div className="container mx-auto">
       <div className="flex justify-end items-center mb-4">
-
         <AddMember />
       </div>
       <div className="rounded-md bg-white border">
@@ -46,6 +45,7 @@ async function MemberTable({
               <TableHead>Phone</TableHead>
               <TableHead>Address</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead className="text-center">Role</TableHead>
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -53,17 +53,19 @@ async function MemberTable({
             {totalMembers > 0 ? (
               memberList.map((member) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium">{member.firstName}</TableCell>
+                  <TableCell className="font-medium">
+                    {member.firstName}
+                  </TableCell>
                   <TableCell>{member.lastName}</TableCell>
                   <TableCell>{member.phone}</TableCell>
                   <TableCell>{member.address}</TableCell>
                   <TableCell>{member.email}</TableCell>
+                  <TableCell className="text-center"><RoleDropdown memberId={member.id} memberRole={member.role} /></TableCell>
                   <TableCell className="text-center">
-                    <div className="flex justify-end space-x-2">
-                    <RoleDropdown memberId={member.id} memberRole={member.role}/>
-                        <DeleteMember memberId={member.id} memberName={`${member.firstName} ${member.lastName}`}/>
-                        
-                    </div>
+                    <DeleteMember
+                      memberId={member.id}
+                      memberName={`${member.firstName} ${member.lastName}`}
+                    />
                   </TableCell>
                 </TableRow>
               ))

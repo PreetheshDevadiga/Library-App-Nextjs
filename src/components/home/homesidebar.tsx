@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookOpen, ChevronLeft, ChevronRight, Library, BookMarked, FileQuestion } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
@@ -18,6 +18,7 @@ export const Sidebar = ({
   toggleSidebar,
 }: SidebarProps) => {
   const pathname = usePathname();
+
   const t = useTranslations('navbar');
 
   const navItems = [
@@ -33,19 +34,16 @@ export const Sidebar = ({
       } h-full transition-all duration-300 ease-in-out flex flex-col`}
     >
       <div className="flex items-center justify-between p-4">
-        <Link href="/home" className="flex items-center space-x-2">
-          <div className={clsx(
-            "bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] p-2 rounded-lg",
-            isSidebarCollapsed ? "mx-auto" : ""
-          )}>
-            <BookOpen className="h-6 w-6 text-[#0A2540]" />
-          </div>
-          {!isSidebarCollapsed && (
+        {!isSidebarCollapsed && (
+          <div className="flex items-center space-x-2">
+            <div className="bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] p-2 rounded-lg">
+              <BookOpen className="h-6 w-6 text-[#0A2540]" />
+            </div>
             <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#7A73FF]">
               {t('title')}
             </h1>
-          )}
-        </Link>
+          </div>
+        )}
         <Button
           variant="ghost"
           size="icon"

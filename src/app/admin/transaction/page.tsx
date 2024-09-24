@@ -13,9 +13,9 @@ import PaginationControls from "../../../components/home/pagination";
 import { DeleteTransaction } from "../../../components/admin/transactions/deleteTransaction";
 import { AproveTransactionButton } from "../../../components/admin/transactions/aproveTransaction"
 import { RejectRequestButton } from "../../../components/admin/transactions/rejectRequest";
-import FilterTransaction from "@/components/admin/transactions/filterTransactions";
-import { Badge } from "@/components/ui/badge";
-import { ReturnBookButton } from "@/components/admin/transactions/returnBookButton"
+import FilterTransaction from "../../../components/admin/transactions/filterTransactions";
+import { Badge } from "../../../components/ui/badge";
+import { ReturnBookButton } from "../../../components/admin/transactions/returnBookButton"
 
 async function TransactionTable({
   searchParams,
