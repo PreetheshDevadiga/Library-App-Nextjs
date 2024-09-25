@@ -6,21 +6,10 @@ import { ProfessorTable } from "../drizzle/schema"
 import { asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { IPageRequest, IPagedResponse } from "./pagination.response";
 
-export class ProfessorRepository implements IRepository<IProfessorBase, IProfessor>{
+export class ProfessorRepository {
     constructor(private readonly db: VercelPgDatabase<Record<string, unknown>>) {}
-    update(id: number, data: { name: string; shortBio: string; department: string; calendlylink: string; }): Promise<{ name: string; shortBio: string; department: string; calendlylink: string; id: number; } | null> {
-        throw new Error("Method not implemented.");
-    }
-    delete(id: number): Promise<{ name: string; shortBio: string; department: string; calendlylink: string; id: number; } | null> {
-        throw new Error("Method not implemented.");
-    }
-    getById(id: number): Promise<{ name: string; shortBio: string; department: string; calendlylink: string; id: number; } | null> {
-        throw new Error("Method not implemented.");
-    }
-    list(params: IPageRequest): Promise<IPagedResponse<{ name: string; shortBio: string; department: string; calendlylink: string; id: number; }>> {
-        throw new Error("Method not implemented.");
-    }
-    async create(data:IProfessorBase):Promise<IProfessor>{
+    
+    async create(data:IProfessorBase){
         const newProfessordata: Omit<IProfessor, "id"> = {
             ...data,
           };
