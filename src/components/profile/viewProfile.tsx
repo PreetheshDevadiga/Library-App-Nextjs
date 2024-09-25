@@ -42,7 +42,7 @@ export default async function UserProfile() {
               className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white"
             >
               <Edit2 className="h-4 w-4 mr-2" />
-              {( t)('viewprofile')}
+              {( t)('editProfile')}
             </Button>
           </Link>
         </div>
