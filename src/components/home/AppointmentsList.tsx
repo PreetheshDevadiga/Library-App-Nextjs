@@ -2,7 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Calendar, Clock, User, Briefcase, Mail, Video } from 'lucide-react';
-import  Link  from "next/navigation";
+
+import CancelAppointment  from "./cancelAppointment"
 
 interface Appointment {
   startTime: string;
@@ -13,6 +14,7 @@ interface Appointment {
   email: string;
   profname: string;
   profdept: string;
+  event_uuid:string;
 }
 
 interface AppointmentsListProps {
@@ -20,6 +22,7 @@ interface AppointmentsListProps {
 }
 
 const AppointmentsList: React.FC<AppointmentsListProps> = ({ appointments }) => {
+  
   return (
     <div className="min-h-screen bg-[#0A2540] p-6">
       <h1 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#7A73FF]">
@@ -49,13 +52,14 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ appointments }) => 
               </div>
             </CardContent>
             <CardFooter className="p-4 bg-[#0A2540] rounded-b-lg">
-                
               <Button 
                 className="w-full bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] text-[#0A2540] hover:from-[#00C4EF] hover:to-[#6A63EF] transition-all duration-300 font-semibold py-2 px-4 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
               >
                 <Video className="w-5 h-5" />
                 <a href={appointment.gmeetLink} >Join Google Meet</a>
               </Button>
+
+              <CancelAppointment uuid={appointment.event_uuid}/>
               
             </CardFooter>
           </Card>

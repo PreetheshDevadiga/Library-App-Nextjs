@@ -1177,6 +1177,7 @@ export async function getInviteeDetails() {
         startTime: convertToIST(startTime),
         endTime: convertToIST(endTime),
         gmeetLink,
+        event_uuid,
         professorEmail,
         name: invitee.name,
         email: invitee.email,
@@ -1264,5 +1265,35 @@ export async function getAllAppointments() {
     return enrichedAppointments;
   } catch (error) {
     console.error("Failed to get appointments", error);
+  }
+}
+
+export async function cancelAppointments(event_uuid: string) {
+  try {
+    const response = await fetch(
+      `https://api.calendly.com/scheduled_events/${event_uuid}/cancellation`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reason: "User canceled the event",
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log("Error fetching scheduled events:", errorText);
+      throw new Error(`Error fetching Calendly events: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("Canceled Data", data);
+    return data;
+  } catch (error) {
+    console.error("Failed to cancel appointment");
   }
 }
