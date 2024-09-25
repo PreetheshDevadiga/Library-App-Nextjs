@@ -88,7 +88,9 @@
     "title": "ಪುಸ್ತಕಕೈಪಿಡಿ",
     "allBooks": "ಎಲ್ಲಾ ಪುಸ್ತಕಗಳು",
     "myBooks": "ನನ್ನ ಪುಸ್ತಕಗಳು",
-    "myRequest": "ನನ್ನ ವಿನಂತಿಗಳು"
+    "myRequest": "ನನ್ನ ವಿನಂತಿಗಳು",
+    "professors":"ಪ್ರಾಧ್ಯಾಪಕರು",
+    "myAppointments":"ನನ್ನ ನೇಮಕಾತಿಗಳು"
   },
   "bookCard": {
     "borrow": "ಎರವಲು ತೆಗೆದುಕೊ",

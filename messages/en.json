@@ -85,7 +85,9 @@
     "title": "BookShelf",
     "allBooks": "All Books",
     "myBooks": "My Books",
-    "myRequest": "My Request"
+    "myRequest": "My Request",
+    "professors":"Professors",
+    "myAppointments":"My Appointments"
   },
   "bookCard": {
     "borrow": "Borrow",
