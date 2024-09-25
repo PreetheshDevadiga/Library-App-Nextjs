@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, ChevronLeft, ChevronRight, Library, BookMarked, FileQuestion } from "lucide-react";
+import { BookOpen, ChevronLeft, ChevronRight, Library, BookMarked, FileQuestion, Users, Calendar, Settings } from "lucide-react";
 import { Button } from "../ui/button";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
@@ -18,32 +18,36 @@ export const Sidebar = ({
   toggleSidebar,
 }: SidebarProps) => {
   const pathname = usePathname();
-
   const t = useTranslations('navbar');
 
   const navItems = [
     { href: "/home", label: t('allBooks'), icon: Library },
     { href: "/home/MyBooks", label: t('myBooks'), icon: BookMarked },
     { href: "/home/Request", label: t('myRequest'), icon: FileQuestion },
+    { href: "/home/professors", label: t('professors'), icon: Users },
+    { href: "/home/myAppointments", label: t('myAppointments'), icon: Calendar },
   ];
 
   return (
     <aside
-      className={`bg-[#0D2E4B] text-white ${
+      className={`bg-[#0A2540] text-white ${
         isSidebarCollapsed ? "w-20" : "w-64"
-      } h-full transition-all duration-300 ease-in-out flex flex-col`}
+      } h-full transition-all duration-300 ease-in-out flex flex-col shadow-lg`}
     >
       <div className="flex items-center justify-between p-4">
-        {!isSidebarCollapsed && (
-          <div className="flex items-center space-x-2">
-            <div className="bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] p-2 rounded-lg">
-              <BookOpen className="h-6 w-6 text-[#0A2540]" />
-            </div>
+        <Link href="/home" className="flex items-center space-x-2">
+          <div className={clsx(
+            "bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] p-2 rounded-lg",
+            isSidebarCollapsed ? "mx-auto" : ""
+          )}>
+            <BookOpen className="h-6 w-6 text-[#0A2540]" />
+          </div>
+          {!isSidebarCollapsed && (
             <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#7A73FF]">
               {t('title')}
             </h1>
-          </div>
-        )}
+          )}
+        </Link>
         <Button
           variant="ghost"
           size="icon"

@@ -1,6 +1,12 @@
-"use server";
+import { useTransition } from "react";
+'use server'
 
-import { IMember, IMemberBase, memberBaseSchema,editMemberSchema } from "@/models/member.model";
+import {
+  IMember,
+  IMemberBase,
+  memberBaseSchema,
+  editMemberSchema,
+} from "@/models/member.model";
 import { BookRepository } from "@/repositories/book.repository";
 import { MemberRepository } from "@/repositories/member.repository";
 import { TransactionRepository } from "@/repositories/transaction.repository";
@@ -8,17 +14,27 @@ import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
 import { auth, signIn } from "../auth";
 import { db } from "./db";
-import { bookBaseSchema, IBookBase, newBookBaseSchema } from "@/models/book.model";
-import { BooksTable, MemberTable, TransactionTable } from "@/drizzle/schema";
+import {
+  bookBaseSchema,
+  IBookBase,
+  newBookBaseSchema,
+} from "@/models/book.model";
+import {
+  BooksTable,
+  MemberTable,
+  ProfessorTable,
+  TransactionTable,
+} from "@/drizzle/schema";
 import { eq, and, ne } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { cloudinary } from "./cloudinary";
-
 
 const memberRepo = new MemberRepository(db);
 
 const bookRepo = new BookRepository(db);
 const transactionRepo = new TransactionRepository(db);
+
+const CALENDLY_API_TOKEN = process.env.NEXT_PUBLIC_CALENDLY_ACCESS_TOKEN;
 
 export interface State {
   errors?: { [key: string]: string[] };
@@ -72,16 +88,16 @@ export async function authenticate(
     const result = await signIn("credentials", {
       redirect: false,
       email: formData.get("email"),
-      password: formData.get("password")
+      password: formData.get("password"),
     });
     const email = formData.get("email");
     const userDetails = await memberRepo.getByEmail(email as string);
     const userRole = userDetails?.role;
-    console.log(userRole)
-    if(userRole === "admin"){
-      redirect("/admin")
+    console.log(userRole);
+    if (userRole === "admin") {
+      redirect("/admin");
     }
-    redirect("/home")
+    redirect("/home");
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -97,7 +113,7 @@ export async function authenticate(
 
 export async function registerUser(prevState: State, formData: FormData) {
   const data = Object.fromEntries(formData.entries());
-console.log(data);
+  console.log(data);
   const validateFields = memberBaseSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -141,7 +157,7 @@ console.log(data);
       password: hashedPwd,
     };
 
-    if(password!==data.confirmPassword){
+    if (password !== data.confirmPassword) {
       console.log("im here");
       return { message: "Passwords do not match" };
     }
@@ -158,17 +174,16 @@ export async function fetchBooks(
   search: string,
   limit: number,
   offset: number,
-  sortBy?:string,
-  orderBy?:string,
-) { 
+  sortBy?: string,
+  orderBy?: string
+) {
   try {
-    
     const books = await bookRepo.list({
       search: search,
       limit: limit,
       offset: offset,
-      sortBy:sortBy,
-      orderBy:orderBy,
+      sortBy: sortBy,
+      orderBy: orderBy,
     });
     if (books) {
       return books;
@@ -191,11 +206,11 @@ export async function addNewBook(prevState: State, formData: FormData) {
     isbnNo: formData.get("isbnNo"),
     pages: Number(formData.get("pages")),
     totalCopies: Number(formData.get("totalCopies")),
-    price: Number(formData.get("price"))
+    price: Number(formData.get("price")),
   });
 
-  const imageUrl = formData.get("imageURL") as string
-  console.log("URL:",imageUrl)
+  const imageUrl = formData.get("imageURL") as string;
+  console.log("URL:", imageUrl);
 
   if (!validateFields.success) {
     console.log("Validation Failure");
@@ -205,7 +220,7 @@ export async function addNewBook(prevState: State, formData: FormData) {
     };
   }
 
-  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price} =
+  const { title, author, publisher, genre, isbnNo, pages, totalCopies, price } =
     validateFields.data;
 
   if (
@@ -215,7 +230,8 @@ export async function addNewBook(prevState: State, formData: FormData) {
     !genre ||
     !isbnNo ||
     !pages ||
-    !totalCopies || !price
+    !totalCopies ||
+    !price
   ) {
     console.log("All fields are required");
     return { message: "All fields are required" };
@@ -238,7 +254,7 @@ export async function addNewBook(prevState: State, formData: FormData) {
       pages,
       totalCopies,
       price,
-      imageUrl
+      imageUrl,
     };
 
     const createdBook = await bookRepo.create(newBook);
@@ -247,7 +263,7 @@ export async function addNewBook(prevState: State, formData: FormData) {
     return { message: "Success" };
   } catch (error) {
     console.log("Error during book registration:", error);
-    return { message: "Error during book registration."};
+    return { message: "Error during book registration." };
   }
 }
 
@@ -273,7 +289,7 @@ export async function updateBook(
     isbnNo: formData.get("isbnNo"),
     pages: Number(formData.get("pages")),
     totalCopies: Number(formData.get("totalCopies")),
-    price:Number(formData.get("price"))
+    price: Number(formData.get("price")),
   });
 
   if (!validateFields.success) {
@@ -285,7 +301,7 @@ export async function updateBook(
     };
   }
 
-  const { title, author, publisher, genre, isbnNo, pages, totalCopies,price} =
+  const { title, author, publisher, genre, isbnNo, pages, totalCopies, price } =
     validateFields.data;
 
   if (
@@ -295,13 +311,13 @@ export async function updateBook(
     !genre ||
     !isbnNo ||
     !pages ||
-    !totalCopies  === undefined
+    !totalCopies === undefined
   ) {
     console.log("All fields are required");
     return { message: "All fields are required" };
   }
 
-  const imageUrl = formData.get("imageURL") as string
+  const imageUrl = formData.get("imageURL") as string;
 
   try {
     await bookRepo.update(id, {
@@ -399,8 +415,6 @@ export async function addNewMember(prevState: State, formData: FormData) {
     };
   }
 
-  
-
   const { firstName, lastName, phone, address, role, email, password } =
     validateFields.data;
 
@@ -443,14 +457,23 @@ export async function addNewMember(prevState: State, formData: FormData) {
       `Member ${createdMember.firstName} ${createdMember.lastName} created successfully!`
     );
     return { message: "Success" };
-  } catch (error:any) {
-    if (error.message.includes("Duplicate entry") && error.message.includes("phone")) {
+  } catch (error: any) {
+    if (
+      error.message.includes("Duplicate entry") &&
+      error.message.includes("phone")
+    ) {
       return { message: "A member with this phone number already exists." };
-    } else if(error.message.includes("Duplicate entry") && error.message.includes("email")) {
+    } else if (
+      error.message.includes("Duplicate entry") &&
+      error.message.includes("email")
+    ) {
       return { message: "A member with this email address already exists." };
     }
 
-    return { message: "Error during member registration.", error: error.message };
+    return {
+      message: "Error during member registration.",
+      error: error.message,
+    };
   }
 }
 
@@ -467,31 +490,27 @@ export async function deleteMember(id: number) {
   }
 }
 
-export async function updateMemberRole(id:number,role:string){
-
-  console.log(id,role)
-  try{
-    await memberRepo.update(id,{role:role});
+export async function updateMemberRole(id: number, role: string) {
+  console.log(id, role);
+  try {
+    await memberRepo.update(id, { role: role });
     console.log("success");
-
-  }catch(error){
+  } catch (error) {
     console.log("Error during Member Update:", error);
-    return { message: "Error during Member Update."};
+    return { message: "Error during Member Update." };
   }
-   
-  
 }
 
 export async function editMember(prevState: State, formData: FormData) {
   const userData = await fetchUserDetails();
-  const role: string | undefined= userData?.userDetails.role;
+  const role: string | undefined = userData?.userDetails.role;
   const validateFields = editMemberSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
     phone: Number(formData.get("phone")),
     address: formData.get("address"),
     email: formData.get("email"),
-    role:role,
+    role: role,
   });
 
   if (!validateFields.success) {
@@ -503,8 +522,7 @@ export async function editMember(prevState: State, formData: FormData) {
     };
   }
 
-  const { firstName, lastName, phone, address, email } =
-    validateFields.data;
+  const { firstName, lastName, phone, address, email } = validateFields.data;
 
   if (!firstName || !lastName || !phone || !address || !email) {
     console.log("All fields are required");
@@ -528,7 +546,7 @@ export async function editMember(prevState: State, formData: FormData) {
 export async function fetchTransaction(
   search: string,
   limit: number,
-  offset: number,
+  offset: number
 ) {
   try {
     const transactions = await transactionRepo.list({
@@ -544,7 +562,6 @@ export async function fetchTransaction(
       console.log("transaction not received");
     }
   } catch (error) {
-    
     console.error("Error handling transaction request:", error);
   }
 }
@@ -561,7 +578,7 @@ export async function fetchTransactionByStatus(
       limit: limit,
       offset: offset,
     };
-    const transactions = await transactionRepo.list(data,filterOption);
+    const transactions = await transactionRepo.list(data, filterOption);
 
     if (transactions) {
       return transactions;
@@ -631,7 +648,9 @@ export async function fetchUserDetails() {
   const user = session?.user;
   const email = user?.email;
   try {
-    const userDetails:IMember|null = await memberRepo.getByEmail(email as string);
+    const userDetails: IMember | null = await memberRepo.getByEmail(
+      email as string
+    );
     if (!userDetails) {
       throw new Error("Details could not be found");
     }
@@ -696,7 +715,7 @@ export async function fetchBorrowedBook() {
         id: TransactionTable.id,
         bookId: BooksTable.id,
         title: BooksTable.title,
-        imageUrl:BooksTable.imageUrl,
+        imageUrl: BooksTable.imageUrl,
         author: BooksTable.author,
         borrowDate: TransactionTable.borrowDate,
         dueDate: TransactionTable.dueDate,
@@ -729,25 +748,25 @@ export async function fetchTransactionDetails(
   };
   try {
     const transactions = await db
-    .select({
-      id: TransactionTable.id,
-      title: BooksTable.title,
-      firstName: MemberTable.firstName,
-      borrowDate: TransactionTable.borrowDate,
-      dueDate:TransactionTable.dueDate,
-      status:TransactionTable.status,
-      returnDate:TransactionTable.returnDate
-    })
-    .from(TransactionTable)
-    .leftJoin(BooksTable, eq(TransactionTable.bookId, BooksTable.id))
-    .leftJoin(MemberTable, eq(TransactionTable.memberId, MemberTable.id));
+      .select({
+        id: TransactionTable.id,
+        title: BooksTable.title,
+        firstName: MemberTable.firstName,
+        borrowDate: TransactionTable.borrowDate,
+        dueDate: TransactionTable.dueDate,
+        status: TransactionTable.status,
+        returnDate: TransactionTable.returnDate,
+      })
+      .from(TransactionTable)
+      .leftJoin(BooksTable, eq(TransactionTable.bookId, BooksTable.id))
+      .leftJoin(MemberTable, eq(TransactionTable.memberId, MemberTable.id));
 
-      if(transactions){
-        console.log("transaction",transactions);
-        return transactions;
-      }else{
-        console.error("error");
-      }
+    if (transactions) {
+      console.log("transaction", transactions);
+      return transactions;
+    } else {
+      console.error("error");
+    }
   } catch (err) {
     console.log("error");
   }
@@ -761,7 +780,7 @@ export async function returnBook(bookId: number) {
     if (!currentMember) {
       throw new Error("User details not found");
     }
-    if (currentMember.userDetails.role==="user") {
+    if (currentMember.userDetails.role === "user") {
       throw new Error("Only admins can return books");
     }
     const transactionId = await db
@@ -786,5 +805,464 @@ export async function returnBook(bookId: number) {
     }
   } catch (error) {
     console.error("Failed to get the book details");
+  }
+}
+
+export async function fetchProfessor() {
+  try {
+    const professors = await db.select().from(ProfessorTable);
+    return professors;
+  } catch (e) {
+    console.error("Failed to get the professors details", e);
+  }
+}
+
+export async function fetchProfessorById(id: number) {
+  try {
+    const [professor] = await db
+      .select()
+      .from(ProfessorTable)
+      .where(eq(ProfessorTable.id, id));
+
+    return professor;
+  } catch (e) {
+    console.error("Failed to get the professors details", e);
+  }
+}
+
+// export async function getUserUri() {
+//   try {
+//     const response = await fetch("https://api.calendly.com/users/me", {
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+//         "Content-Type": "application/json",
+//       },
+//     });
+//     console.log("Prganizations", response);
+//     if (!response.ok) {
+//       throw new Error(`Error fetching user info: ${response.statusText}`);
+//     }
+
+//     const data = await response.json();
+//     console.log("scheduled event==>", data.resource.name);
+//     return data.resource.uri; // This is the user's URI
+//   } catch (error) {
+//     console.error("Error fetching user URI", error);
+//     throw error;
+//   }
+// }
+
+// // Fetch scheduled events for the user
+// export async function getScheduledEvents() {
+//   const userUri = await getUserUri(); // Get the logged-in user's URI
+
+//   try {
+//     const response = await fetch(
+//       `https://api.calendly.com/scheduled_events?user=${encodeURIComponent(
+//         userUri
+//       )}`,
+//       {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     );
+
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       console.log("Error fetching scheduled events:", errorText);
+//       throw new Error(`Error fetching Calendly events: ${response.statusText}`);
+//     }
+
+//     const data = await response.json();
+//     // console.log("Scheduled events:", data);
+
+//     return data.collection;
+//     // Return an array of scheduled events
+//   } catch (error) {
+//     console.error("Error fetching scheduled events", error);
+//     throw error;
+//   }
+// }
+
+// export async function getEventUuid() {
+//   const events = await getScheduledEvents();
+//   console.log("Events in getEventuuid", events);
+
+//   if (events.length > 0) {
+//     const eventDetails = events.map((event: any) => {
+//       const eventUuid = event.uri.split("/").pop(); // Extract the UUID from the URI
+//       const startTime = event.start_time;
+//       const endTime = event.end_time;
+//       const gmeetLink = event.location.join_url; // Extract Google Meet link
+//       const memberShip=event.event_memebrships[0];
+//       const professorEmail=memberShip? memberShip.user_email : null;
+
+//       const convertToIST = (utcTime: string) => {
+//         const date = new Date(utcTime);
+//         const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC +5:30 in milliseconds
+//         const istDate = new Date(date.getTime() + istOffset);
+
+//         return istDate.toISOString().replace("T", " ").slice(0, 19); // Format: YYYY-MM-DD HH:MM:SS
+//       };
+
+//       return {
+//         uuid: eventUuid,
+//         startTime: convertToIST(startTime),
+//         endTime: convertToIST(endTime),
+//         gmeetLink,
+//         professorEmail
+//       };
+//     });
+
+//     console.log("Event Details:", eventDetails);
+
+//     return eventDetails;
+//   } else {
+//     console.log("No events found");
+//     return null;
+//   }
+// }
+
+// export async function getProfessorByEmail(email: string) {
+//   try {
+//     const [professors] = await db
+//       .select()
+//       .from(ProfessorTable)
+//       .where(eq(ProfessorTable.email, email));
+//     if (!professors) {
+//       console.log("No professors");
+//     }
+//     return professors;
+//   } catch (error) {
+//     console.error("Failed to fetch professor by email", error);
+//   }
+// }
+
+// export async function getInviteeDetails() {
+//   const eventDetails = await getEventUuid();
+// console.log("eventDetails",eventDetails)
+//   // Use Promise.all to wait for all fetch calls to complete
+//   const inviteeDetails = await Promise.all(
+//     eventDetails.map(async (event: any) => {
+//       const startTime = event.startTime;
+//       const endTime = event.endTime;
+//       const gmeetLink = event.gmeetLink;
+//       const event_uuid = event.uuid;
+
+//       const response = await fetch(
+//         `https://api.calendly.com/scheduled_events/${event_uuid}/invitees`,
+//         {
+//           method: "GET",
+//           headers: {
+//             Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+
+//       if (!response.ok) {
+//         const errorText = await response.text();
+//         console.log("Error fetching scheduled events:", errorText);
+//         throw new Error(
+//           `Error fetching Calendly events: ${response.statusText}`
+//         );
+//       }
+
+//       const data = await response.json();
+//       console.log("Scheduled event invitees:", data);
+
+//       const convertToIST = (utcTime: string) => {
+//         const date = new Date(utcTime);
+//         const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC +5:30 in milliseconds
+//         const istDate = new Date(date.getTime() + istOffset);
+
+//         return istDate.toISOString().replace("T", " ").slice(0, 19); // Format: YYYY-MM-DD HH:MM:SS
+//       };
+//       // Map the invitees to the desired output format
+//       const invitees = data.collection.map((invitee: any) => ({
+//         startTime: convertToIST(startTime),
+//         endTime: convertToIST(endTime),
+//         gmeetLink,
+//         name: invitee.name,
+//         email: invitee.email,
+//       }));
+
+//       return invitees; // Return the array of invitee details for this event
+//     })
+//   );
+
+//   // Flatten the array of arrays into a single array
+//   return inviteeDetails.flat();
+// }
+
+// export async function getUerAppointmentList() {
+//   try {
+//     console.log("heee")
+//     const userInformation = await fetchUserDetails();
+//     const currentUserEmail = userInformation?.userDetails;
+//     const userEmail = currentUserEmail?.email;
+//     console.log("userEmail",userEmail)
+//     const scheduleDetails = await getInviteeDetails();
+//     console.log("scheduleDetails",scheduleDetails)
+//     const userAppointments = scheduleDetails.filter(
+//       (details) => details.email === userEmail
+//     );
+//     console.log("userAppointments",userAppointments)
+//     const enrichedAppointments = await Promise.all(
+//       userAppointments.map(async (appointment) => {
+//         const profDetails = await getProfessorByEmail(
+//           appointment.professorEmail
+//         );
+
+//         console.log(profDetails);
+//         return {
+//           ...appointment,
+//           profresssorName: profDetails!.name,
+//           professorDepartment: profDetails!.department,
+//         };
+//       })
+//     );
+//     return enrichedAppointments;
+//   } catch (error) {
+//     console.error("Failed to get appointements", error);
+//   }
+// }
+
+export async function getUserUri() {
+  try {
+    const response = await fetch("https://api.calendly.com/users/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("Organizations", response);
+    if (!response.ok) {
+      throw new Error(`Error fetching user info: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.resource.uri; // This is the user's URI
+  } catch (error) {
+    console.error("Error fetching user URI", error);
+    throw error;
+  }
+}
+
+// Fetch scheduled events for the user
+export async function getScheduledEvents() {
+  const userUri = await getUserUri(); // Get the logged-in user's URI
+
+  try {
+    const response = await fetch(
+      `https://api.calendly.com/scheduled_events?user=${encodeURIComponent(
+        userUri
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log("Error fetching scheduled events:", errorText);
+      throw new Error(`Error fetching Calendly events: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    // console.log("Scheduled events:", data);
+    // console.log("Members", data.collection);
+    return data.collection; // Return an array of scheduled events
+  } catch (error) {
+    console.error("Error fetching scheduled events", error);
+    throw error;
+  }
+}
+
+export async function getEventUuid() {
+  const events = await getScheduledEvents();
+  // console.log("Events in getEventuuid", events);
+
+  if (events.length > 0) {
+    const eventDetails = events.map((event: any) => {
+      const eventUuid = event.uri.split("/").pop(); // Extract the UUID from the URI
+      const startTime = event.start_time;
+      const endTime = event.end_time;
+      const gmeetLink = event.location.join_url; // Extract Google Meet link
+
+      const membership = event.event_memberships[0]; // Get the first membership
+      const profEmail = membership ? membership.user_email : null;
+      return {
+        uuid: eventUuid,
+        startTime,
+        endTime,
+        gmeetLink,
+        profEmail,
+      };
+    });
+
+    console.log("Event Details:", eventDetails);
+    return eventDetails;
+  } else {
+    console.log("No events found");
+    return null;
+  }
+}
+
+export async function getInviteeDetails() {
+  const eventDetails = await getEventUuid();
+
+  // Use Promise.all to wait for all fetch calls to complete
+  const inviteeDetails = await Promise.all(
+    eventDetails.map(async (event: any) => {
+      const startTime = event.startTime;
+      const endTime = event.endTime;
+      const gmeetLink = event.gmeetLink;
+      const professorEmail = event.profEmail;
+      const event_uuid = event.uuid;
+
+      const response = await fetch(
+        `https://api.calendly.com/scheduled_events/${event_uuid}/invitees`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log("Error fetching scheduled events:", errorText);
+        throw new Error(
+          `Error fetching Calendly events: ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+      // console.log("Scheduled event invitees:", data);
+
+      const convertToIST = (utcTime: string) => {
+        const date = new Date(utcTime);
+
+        // Options for time formatting in IST
+        const options: Intl.DateTimeFormatOptions = {
+          timeZone: "Asia/Kolkata", // IST timezone
+          weekday: "long",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true, // 12-hour format
+        };
+
+        // Convert UTC time to IST using toLocaleString
+        const istDateTime = date.toLocaleString("en-IN", options);
+
+        return istDateTime; // Format: "Day, MM/DD/YYYY, HH:MM AM/PM"
+      };
+      // Map the invitees to the desired output format
+      const invitees = data.collection.map((invitee: any) => ({
+        startTime: convertToIST(startTime),
+        endTime: convertToIST(endTime),
+        gmeetLink,
+        professorEmail,
+        name: invitee.name,
+        email: invitee.email,
+      }));
+
+      return invitees; // Return the array of invitee details for this event
+    })
+  );
+
+  // Flatten the array of arrays into a single array
+  return inviteeDetails.flat();
+}
+
+export async function getProfessorByEmail(email: string) {
+  try {
+    const [professors] = await db
+      .select()
+      .from(ProfessorTable)
+      .where(eq(ProfessorTable.email, email));
+    if (!professors) {
+      console.log("No professors");
+    }
+    return professors;
+  } catch (error) {
+    console.error("Failed to fetch professor by email", error);
+  }
+}
+
+export async function getUserAppointments() {
+  try {
+    const userDetails = await fetchUserDetails();
+    const userEmail = userDetails?.user?.email
+      ? userDetails.user.email
+      : userDetails!.userDetails.email;
+    console.log("Email", userEmail);
+    const scheduledDetails = await getInviteeDetails();
+    const userAppointments = scheduledDetails.filter(
+      (details) => details.email === userEmail
+    );
+    console.log("User appoints", userAppointments);
+    const enrichedAppointments = await Promise.all(
+      userAppointments.map(async (appointment) => {
+        // Assuming getProfessorDetailsByEmail returns an object like { profname, profdept }
+        const profDetails = await getProfessorByEmail(
+          appointment.professorEmail
+        );
+        console.log(profDetails);
+        // Add the professor details to the appointment
+        return {
+          ...appointment,
+          profname: profDetails!.name,
+          profdept: profDetails!.department,
+        };
+      })
+    );
+    console.log("Enriched", enrichedAppointments);
+    return enrichedAppointments;
+  } catch (error) {
+    console.error("Failed to get appointments", error);
+  }
+}
+
+export async function getAllAppointments() {
+  try {
+    const userDetails = await fetchUserDetails();
+    const userEmail = userDetails?.userDetails.email;
+    const scheduledDetails = await getInviteeDetails();
+    console.log("User appoints", scheduledDetails);
+    const enrichedAppointments = await Promise.all(
+      scheduledDetails.map(async (appointment) => {
+        // Assuming getProfessorDetailsByEmail returns an object like { profname, profdept }
+        const profDetails = await getProfessorByEmail(
+          appointment.professorEmail
+        );
+        console.log(profDetails);
+        // Add the professor details to the appointment
+        return {
+          ...appointment,
+          profname: profDetails!.name,
+          profdept: profDetails!.department,
+        };
+      })
+    );
+    console.log("Enriched All", enrichedAppointments);
+    return enrichedAppointments;
+  } catch (error) {
+    console.error("Failed to get appointments", error);
   }
 }

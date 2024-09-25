@@ -22,6 +22,13 @@
       "when": 1726660173570,
       "tag": "0002_magical_lilandra",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1727162068727,
+      "tag": "0003_panoramic_stellaris",
+      "breakpoints": true
     }
   ]
 }

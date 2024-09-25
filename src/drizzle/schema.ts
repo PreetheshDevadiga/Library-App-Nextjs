@@ -5,6 +5,7 @@ import {
   serial,
   varchar,
   pgTable,
+  text,
 } from "drizzle-orm/pg-core";
 
 // Books Table
@@ -54,4 +55,22 @@ export const TransactionTable = pgTable("transactions", {
   dueDate: varchar("dueDate", { length: 15 }),
   status: varchar("status", { length: 15 }).notNull(),
   returnDate: varchar("returnDate", { length: 10 }),
+});
+
+export const ProfessorTable = pgTable("professors", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }) 
+    .notNull(),
+
+  shortBio: text("shortBio")
+    .notNull(),
+    
+  department: varchar("department", { length: 255 })
+    .notNull(),
+
+    calendlylink: varchar("calendlylink", { length: 255 })
+    .notNull(),
+    
+    email:varchar("email",{length:255}),
+  
 });
