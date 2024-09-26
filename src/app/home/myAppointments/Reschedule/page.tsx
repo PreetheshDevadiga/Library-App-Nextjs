@@ -6,6 +6,6 @@ export default function RescheduleAppointment({searchParams,}:{searchParams?:{ur
     console.log("url",url);
     return(
         <CalendlyWidget
-            calendlyUrl={url!} professorName={""} clientName={""} clientEmail={""}      />
+            calendlyUrl={url!} professorName={""} clientName={""} clientEmail={""} />
     )
 }

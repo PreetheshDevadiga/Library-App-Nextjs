@@ -1,48 +1,62 @@
-"use client"
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AddBook } from "@/components/home/addbook";
 import { fetchBooks } from "@/lib/action";
 import PaginationControls from "@/components/home/pagination";
 import BooksTable from "@/components/admin/books/bookstable";
 import { IBook } from "@/models/book.model";
 
-function BookTable({
-  searchParams,
+interface Props {
+  books: IBook[];
+  totalBooks: number;
+  query: string;
+  currentPage: number;
+  sortBy: string;
+  orderBy: string;
+}
+
+export async function getServerSideProps({
+  query,
 }: {
-  searchParams?: {
+  query: {
     query?: string;
     page?: string;
     sortBy?: string;
     orderBy?: string;
   };
 }) {
-  const query: string = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
+  const searchQuery = query.query || "";
+  const currentPage = Number(query.page) || 1;
   const limit = 6;
-  const offset = (Number(currentPage) - 1) * limit;
-  const sortBy = searchParams?.sortBy || "title";
-  const orderBy = searchParams?.orderBy || "asc";
-const [books,setbooks] = useState<IBook[]>([]);
-const [totalBooks,setTotalBooks]= useState(1);
-  useEffect(() => {
-    const fetchData = async () => {
-      const booksResponse = await fetchBooks(
-        query,
-        limit,
-        offset,
-        sortBy,
-        orderBy
-      );
-      let booksList = booksResponse?.items || [];
-      let totalBooksList = Number(booksResponse?.pagination.total);
+  const offset = (currentPage - 1) * limit;
+  const sortBy = query.sortBy || "title";
+  const orderBy = query.orderBy || "asc";
 
-      setbooks(booksList);
-      setTotalBooks(totalBooksList);
-    };
+  const booksResponse = await fetchBooks(searchQuery, limit, offset, sortBy, orderBy);
+  const books = booksResponse?.items || [];
+  const totalBooks = Number(booksResponse?.pagination.total) || 0;
 
-    fetchData();
-  },[offset, orderBy, query, searchParams, sortBy]);
+  return {
+    props: {
+      books,
+      totalBooks,
+      query: searchQuery,
+      currentPage,
+      sortBy,
+      orderBy,
+    },
+  };
+}
+
+function BookTable({
+  books,
+  totalBooks,
+  query,
+  currentPage,
+  sortBy,
+  orderBy,
+}: Props) {
+  const limit = 6;
+
   return (
     <div className="container mx-auto">
       <div className="flex justify-end items-center mb-4">
