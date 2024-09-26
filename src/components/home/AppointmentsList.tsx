@@ -2,10 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Calendar, Clock, User, Briefcase, Mail, Video } from 'lucide-react';
-
+import { RescheduleAppointment } from "./rescheduleButton"
 import CancelAppointment  from "./cancelAppointment"
 
 interface Appointment {
+  rescheduleUrl: string;
   startTime: string;
   endTime: string;
   gmeetLink: string;
@@ -29,7 +30,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ appointments }) => 
         My Appointments
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {appointments.map((appointment) => (
+        {appointments!.map((appointment) => (
           <Card key={appointment.email} className="bg-[#0D2E4B] border-[#1A3550] rounded-lg text-white hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] p-4">
               <CardTitle className="text-xl font-bold text-[#0A2540] flex items-center space-x-2">
@@ -50,14 +51,17 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ appointments }) => 
                 <Briefcase className="w-5 h-5" />
                 <span>{appointment.profdept}</span>
               </div>
-            </CardContent>
-            <CardFooter className="p-4 bg-[#0A2540] rounded-b-lg">
+
               <Button 
                 className="w-full bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] text-[#0A2540] hover:from-[#00C4EF] hover:to-[#6A63EF] transition-all duration-300 font-semibold py-2 px-4 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
               >
                 <Video className="w-5 h-5" />
                 <a href={appointment.gmeetLink} >Join Google Meet</a>
               </Button>
+            </CardContent>
+            <CardFooter className="p-4 bg-[#0A2540] rounded-b-lg flex flex-row justify-between items-center">
+
+              <RescheduleAppointment rescheduleLink={appointment.rescheduleUrl}/>
 
               <CancelAppointment uuid={appointment.event_uuid}/>
               
