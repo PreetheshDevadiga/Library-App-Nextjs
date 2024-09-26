@@ -1090,7 +1090,7 @@ export async function getScheduledEvents() {
 
 export async function getEventUuid() {
   const events = await getScheduledEvents();
-  // console.log("Events in getEventuuid", events);
+  console.log("Events in getEventuuid", events);
 
   if (events.length > 0) {
     const eventDetails = events.map((event: any) => {
@@ -1098,7 +1098,7 @@ export async function getEventUuid() {
       const startTime = event.start_time;
       const endTime = event.end_time;
       const gmeetLink = event.location.join_url; // Extract Google Meet link
-
+      const status=event.status;
       const membership = event.event_memberships[0]; // Get the first membership
       const profEmail = membership ? membership.user_email : null;
       return {
@@ -1107,10 +1107,11 @@ export async function getEventUuid() {
         endTime,
         gmeetLink,
         profEmail,
+        status,
       };
     });
 
-    console.log("Event Details:", eventDetails);
+
     return eventDetails;
   } else {
     console.log("No events found");
@@ -1129,6 +1130,7 @@ export async function getInviteeDetails() {
       const gmeetLink = event.gmeetLink;
       const professorEmail = event.profEmail;
       const event_uuid = event.uuid;
+      const status=event.status;
 
       const response = await fetch(
         `https://api.calendly.com/scheduled_events/${event_uuid}/invitees`,
@@ -1150,7 +1152,6 @@ export async function getInviteeDetails() {
       }
 
       const data = await response.json();
-      // console.log("Scheduled event invitees:", data);
 
       const convertToIST = (utcTime: string) => {
         const date = new Date(utcTime);
@@ -1170,9 +1171,9 @@ export async function getInviteeDetails() {
         // Convert UTC time to IST using toLocaleString
         const istDateTime = date.toLocaleString("en-IN", options);
 
-        return istDateTime; // Format: "Day, MM/DD/YYYY, HH:MM AM/PM"
+        return istDateTime; 
       };
-      // Map the invitees to the desired output format
+
       const invitees = data.collection.map((invitee: any) => ({
         startTime: convertToIST(startTime),
         endTime: convertToIST(endTime),
@@ -1181,13 +1182,15 @@ export async function getInviteeDetails() {
         professorEmail,
         name: invitee.name,
         email: invitee.email,
+        status,
+        rescheduleUrl:invitee.reschedule_url,
       }));
 
       return invitees; // Return the array of invitee details for this event
     })
   );
 
-  // Flatten the array of arrays into a single array
+
   return inviteeDetails.flat();
 }
 
@@ -1214,18 +1217,16 @@ export async function getUserAppointments() {
       : userDetails!.userDetails.email;
     console.log("Email", userEmail);
     const scheduledDetails = await getInviteeDetails();
+    console.log("scheduledDetails",scheduledDetails);
     const userAppointments = scheduledDetails.filter(
       (details) => details.email === userEmail
     );
-    console.log("User appoints", userAppointments);
+
     const enrichedAppointments = await Promise.all(
       userAppointments.map(async (appointment) => {
-        // Assuming getProfessorDetailsByEmail returns an object like { profname, profdept }
         const profDetails = await getProfessorByEmail(
           appointment.professorEmail
         );
-        console.log(profDetails);
-        // Add the professor details to the appointment
         return {
           ...appointment,
           profname: profDetails!.name,
@@ -1233,8 +1234,9 @@ export async function getUserAppointments() {
         };
       })
     );
-    console.log("Enriched", enrichedAppointments);
-    return enrichedAppointments;
+
+    const activeAppointments =enrichedAppointments.filter((appointment)=>appointment.status==="active")
+    return activeAppointments;
   } catch (error) {
     console.error("Failed to get appointments", error);
   }
@@ -1245,15 +1247,12 @@ export async function getAllAppointments() {
     const userDetails = await fetchUserDetails();
     const userEmail = userDetails?.userDetails.email;
     const scheduledDetails = await getInviteeDetails();
-    console.log("User appoints", scheduledDetails);
     const enrichedAppointments = await Promise.all(
       scheduledDetails.map(async (appointment) => {
-        // Assuming getProfessorDetailsByEmail returns an object like { profname, profdept }
         const profDetails = await getProfessorByEmail(
           appointment.professorEmail
         );
-        console.log(profDetails);
-        // Add the professor details to the appointment
+       
         return {
           ...appointment,
           profname: profDetails!.name,
@@ -1261,7 +1260,7 @@ export async function getAllAppointments() {
         };
       })
     );
-    console.log("Enriched All", enrichedAppointments);
+
     return enrichedAppointments;
   } catch (error) {
     console.error("Failed to get appointments", error);
@@ -1270,6 +1269,7 @@ export async function getAllAppointments() {
 
 export async function cancelAppointments(event_uuid: string) {
   try {
+    console.log("heeyyyy")
     const response = await fetch(
       `https://api.calendly.com/scheduled_events/${event_uuid}/cancellation`,
       {

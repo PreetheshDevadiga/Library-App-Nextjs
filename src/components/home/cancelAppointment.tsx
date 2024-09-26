@@ -40,10 +40,11 @@ export default function CancelAppointment({ uuid }: CancelAppointmentProps) {
   return (
     <Button
       onClick={handleCancel}
-      className="bg-gradient-to-r from-[#FF4136] to-[#FF851B] hover:from-[#E03126] hover:to-[#EF750B] text-white font-semibold py-2 px-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
+      variant="destructive"
+    //   className="bg-gradient-to-r from-[#FF4136] to-[#FF851B] hover:from-[#E03126] hover:to-[#EF750B] text-white font-semibold py-2 px-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
     >
-      <X className="w-4 h-4" />
-      <span>Cancel Appointment</span>
+      {/* <X className="w-4 h-4" /> */}
+      <span>Cancel</span>
     </Button>
   );
 }
