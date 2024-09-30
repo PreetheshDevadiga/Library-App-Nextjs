@@ -125,9 +125,9 @@ export default function Sidebar({
         <div className="flex flex-row gap-1 p-4 items-center">
           <Link
             className={clsx("text-black hover:text-blue-600", {
-              "text-blue-600": pathname === "/admin/Professors",
+              "text-blue-600": pathname === "/admin/professors",
             })}
-            href="/admin/transaction"
+            href="/admin/Professors"
           >
             <Calendar
               className={`h-5 w-5 ${isSidebarCollapsed ? "mx-auto" : "mr-2"}`}
@@ -142,6 +142,31 @@ export default function Sidebar({
               href="/admin/Professors"
             >
               All Professors
+            </Link>
+          )}
+          
+        </div>
+
+        <div className="flex flex-row gap-1 p-4 items-center">
+          <Link
+            className={clsx("text-black hover:text-blue-600", {
+              "text-blue-600": pathname === "/admin/allAppointments",
+            })}
+            href="/admin/allAppointments"
+          >
+            <Calendar
+              className={`h-5 w-5 ${isSidebarCollapsed ? "mx-auto" : "mr-2"}`}
+            />
+          </Link>
+
+          {!isSidebarCollapsed && (
+            <Link
+              className={clsx("text-black hover:text-blue-600", {
+                "text-blue-600": pathname === "/admin/allAppointments",
+              })}
+              href="/admin/allAppointments"
+            >
+              All Appointments
             </Link>
           )}
           

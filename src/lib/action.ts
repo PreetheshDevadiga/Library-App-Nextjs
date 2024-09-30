@@ -10,6 +10,7 @@ import {
 import { BookRepository } from "@/repositories/book.repository";
 import { MemberRepository } from "@/repositories/member.repository";
 import { TransactionRepository } from "@/repositories/transaction.repository";
+import { ProfessorRepository } from "@/repositories/professors.repository";
 import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
 import { auth, signIn } from "../auth";
@@ -28,12 +29,13 @@ import {
 import { eq, and, ne } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { cloudinary } from "./cloudinary";
+import { IProfessorBase, professorBaseSchema } from "@/models/professor.model";
 
 const memberRepo = new MemberRepository(db);
 
 const bookRepo = new BookRepository(db);
 const transactionRepo = new TransactionRepository(db);
-
+const professorsRepo = new ProfessorRepository(db);
 const CALENDLY_API_TOKEN = process.env.NEXT_PUBLIC_CALENDLY_ACCESS_TOKEN;
 
 export interface State {
@@ -590,41 +592,6 @@ export async function fetchTransactionByStatus(
   }
 }
 
-// export async function fetchTransaction(search: string, limit: number, offset: number) {
-//   try {
-
-//     const transactions = await db
-//       .select({
-//         id: TransactionTable.id,
-//         title: BooksTable.title,
-//         author: BooksTable.author,
-//         memberFirstName: MemberTable.firstName,
-//         memberLastName: MemberTable.lastName,
-//         dueDate: TransactionTable.dueDate,
-//         status: TransactionTable.status,
-//       })
-//       .from(TransactionTable)
-//       .innerJoin(BooksTable, eq(TransactionTable.bookId, BooksTable.id))
-//       .innerJoin(MemberTable, eq(TransactionTable.memberId, MemberTable.id))
-//       .where(
-//         and(
-//           like(BooksTable.title, `%${search}%`),
-//           ne(TransactionTable.status, "Returned")
-//         )
-//       )
-//       .limit(limit)
-//       .offset(offset);
-
-//     if (transactions) {
-//       console.log("Received transactions with member and book details");
-//       return transactions;
-//     } else {
-//       console.log("Transactions not received");
-//     }
-//   } catch (error) {
-//     console.error("Error handling transaction request:", error);
-//   }
-// }
 
 export async function aproveTransaction(id: number) {
   try {
@@ -830,208 +797,6 @@ export async function fetchProfessorById(id: number) {
   }
 }
 
-// export async function getUserUri() {
-//   try {
-//     const response = await fetch("https://api.calendly.com/users/me", {
-//       method: "GET",
-//       headers: {
-//         Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     console.log("Prganizations", response);
-//     if (!response.ok) {
-//       throw new Error(`Error fetching user info: ${response.statusText}`);
-//     }
-
-//     const data = await response.json();
-//     console.log("scheduled event==>", data.resource.name);
-//     return data.resource.uri; // This is the user's URI
-//   } catch (error) {
-//     console.error("Error fetching user URI", error);
-//     throw error;
-//   }
-// }
-
-// // Fetch scheduled events for the user
-// export async function getScheduledEvents() {
-//   const userUri = await getUserUri(); // Get the logged-in user's URI
-
-//   try {
-//     const response = await fetch(
-//       `https://api.calendly.com/scheduled_events?user=${encodeURIComponent(
-//         userUri
-//       )}`,
-//       {
-//         method: "GET",
-//         headers: {
-//           Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-
-//     if (!response.ok) {
-//       const errorText = await response.text();
-//       console.log("Error fetching scheduled events:", errorText);
-//       throw new Error(`Error fetching Calendly events: ${response.statusText}`);
-//     }
-
-//     const data = await response.json();
-//     // console.log("Scheduled events:", data);
-
-//     return data.collection;
-//     // Return an array of scheduled events
-//   } catch (error) {
-//     console.error("Error fetching scheduled events", error);
-//     throw error;
-//   }
-// }
-
-// export async function getEventUuid() {
-//   const events = await getScheduledEvents();
-//   console.log("Events in getEventuuid", events);
-
-//   if (events.length > 0) {
-//     const eventDetails = events.map((event: any) => {
-//       const eventUuid = event.uri.split("/").pop(); // Extract the UUID from the URI
-//       const startTime = event.start_time;
-//       const endTime = event.end_time;
-//       const gmeetLink = event.location.join_url; // Extract Google Meet link
-//       const memberShip=event.event_memebrships[0];
-//       const professorEmail=memberShip? memberShip.user_email : null;
-
-//       const convertToIST = (utcTime: string) => {
-//         const date = new Date(utcTime);
-//         const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC +5:30 in milliseconds
-//         const istDate = new Date(date.getTime() + istOffset);
-
-//         return istDate.toISOString().replace("T", " ").slice(0, 19); // Format: YYYY-MM-DD HH:MM:SS
-//       };
-
-//       return {
-//         uuid: eventUuid,
-//         startTime: convertToIST(startTime),
-//         endTime: convertToIST(endTime),
-//         gmeetLink,
-//         professorEmail
-//       };
-//     });
-
-//     console.log("Event Details:", eventDetails);
-
-//     return eventDetails;
-//   } else {
-//     console.log("No events found");
-//     return null;
-//   }
-// }
-
-// export async function getProfessorByEmail(email: string) {
-//   try {
-//     const [professors] = await db
-//       .select()
-//       .from(ProfessorTable)
-//       .where(eq(ProfessorTable.email, email));
-//     if (!professors) {
-//       console.log("No professors");
-//     }
-//     return professors;
-//   } catch (error) {
-//     console.error("Failed to fetch professor by email", error);
-//   }
-// }
-
-// export async function getInviteeDetails() {
-//   const eventDetails = await getEventUuid();
-// console.log("eventDetails",eventDetails)
-//   // Use Promise.all to wait for all fetch calls to complete
-//   const inviteeDetails = await Promise.all(
-//     eventDetails.map(async (event: any) => {
-//       const startTime = event.startTime;
-//       const endTime = event.endTime;
-//       const gmeetLink = event.gmeetLink;
-//       const event_uuid = event.uuid;
-
-//       const response = await fetch(
-//         `https://api.calendly.com/scheduled_events/${event_uuid}/invitees`,
-//         {
-//           method: "GET",
-//           headers: {
-//             Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-
-//       if (!response.ok) {
-//         const errorText = await response.text();
-//         console.log("Error fetching scheduled events:", errorText);
-//         throw new Error(
-//           `Error fetching Calendly events: ${response.statusText}`
-//         );
-//       }
-
-//       const data = await response.json();
-//       console.log("Scheduled event invitees:", data);
-
-//       const convertToIST = (utcTime: string) => {
-//         const date = new Date(utcTime);
-//         const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC +5:30 in milliseconds
-//         const istDate = new Date(date.getTime() + istOffset);
-
-//         return istDate.toISOString().replace("T", " ").slice(0, 19); // Format: YYYY-MM-DD HH:MM:SS
-//       };
-//       // Map the invitees to the desired output format
-//       const invitees = data.collection.map((invitee: any) => ({
-//         startTime: convertToIST(startTime),
-//         endTime: convertToIST(endTime),
-//         gmeetLink,
-//         name: invitee.name,
-//         email: invitee.email,
-//       }));
-
-//       return invitees; // Return the array of invitee details for this event
-//     })
-//   );
-
-//   // Flatten the array of arrays into a single array
-//   return inviteeDetails.flat();
-// }
-
-// export async function getUerAppointmentList() {
-//   try {
-//     console.log("heee")
-//     const userInformation = await fetchUserDetails();
-//     const currentUserEmail = userInformation?.userDetails;
-//     const userEmail = currentUserEmail?.email;
-//     console.log("userEmail",userEmail)
-//     const scheduleDetails = await getInviteeDetails();
-//     console.log("scheduleDetails",scheduleDetails)
-//     const userAppointments = scheduleDetails.filter(
-//       (details) => details.email === userEmail
-//     );
-//     console.log("userAppointments",userAppointments)
-//     const enrichedAppointments = await Promise.all(
-//       userAppointments.map(async (appointment) => {
-//         const profDetails = await getProfessorByEmail(
-//           appointment.professorEmail
-//         );
-
-//         console.log(profDetails);
-//         return {
-//           ...appointment,
-//           profresssorName: profDetails!.name,
-//           professorDepartment: profDetails!.department,
-//         };
-//       })
-//     );
-//     return enrichedAppointments;
-//   } catch (error) {
-//     console.error("Failed to get appointements", error);
-//   }
-// }
-
 export async function getUserUri() {
   try {
     const response = await fetch("https://api.calendly.com/users/me", {
@@ -1047,21 +812,24 @@ export async function getUserUri() {
     }
 
     const data = await response.json();
-    return data.resource.uri; // This is the user's URI
+    console.log("data",data)
+    return data.resource.current_organization; 
+    // This is the user's URI
   } catch (error) {
     console.error("Error fetching user URI", error);
     throw error;
   }
 }
 
+
 // Fetch scheduled events for the user
 export async function getScheduledEvents() {
-  const userUri = await getUserUri(); // Get the logged-in user's URI
+  const current_organization = await getUserUri(); // Get the logged-in user's URI
 
   try {
     const response = await fetch(
-      `https://api.calendly.com/scheduled_events?user=${encodeURIComponent(
-        userUri
+      `https://api.calendly.com/scheduled_events?organization=${encodeURIComponent(
+        current_organization
       )}`,
       {
         method: "GET",
@@ -1074,13 +842,12 @@ export async function getScheduledEvents() {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.log("Error fetching scheduled events:", errorText);
+      console.log("Error fetching scheduled events Error here:", errorText);
       throw new Error(`Error fetching Calendly events: ${response.statusText}`);
     }
 
     const data = await response.json();
-    // console.log("Scheduled events:", data);
-    // console.log("Members", data.collection);
+   
     return data.collection; // Return an array of scheduled events
   } catch (error) {
     console.error("Error fetching scheduled events", error);
@@ -1269,7 +1036,7 @@ export async function getAllAppointments() {
 
 export async function cancelAppointments(event_uuid: string) {
   try {
-    console.log("heeyyyy")
+
     const response = await fetch(
       `https://api.calendly.com/scheduled_events/${event_uuid}/cancellation`,
       {
@@ -1295,5 +1062,171 @@ export async function cancelAppointments(event_uuid: string) {
     return data;
   } catch (error) {
     console.error("Failed to cancel appointment");
+  }
+}
+
+export async function getAllProfessorsAppointments(){
+  try {
+
+    const scheduledDetails = await getInviteeDetails();
+    const enrichedAppointments = await Promise.all(
+      scheduledDetails.map(async (appointment) => {
+        
+        const profDetails = await getProfessorByEmail(
+          appointment.professorEmail
+        );
+        
+        return {
+          ...appointment,
+          profname: profDetails!.name,
+          profdept: profDetails!.department,
+        };
+      })
+    );
+    console.log("Enriched All", enrichedAppointments);
+    return enrichedAppointments.filter(
+      (appointment) => appointment.status === "active"
+    );
+  } catch (error) {
+    console.error("Failed to get appointments", error);
+  }
+}
+
+export async function addProfessor(prevState: State, formData: FormData) {
+
+  const data = Object.fromEntries(formData.entries());
+  const validateFields = professorBaseSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    department: formData.get("department"),
+    shortBio: formData.get("shortBio"),
+  });
+
+  if (!validateFields.success) {
+    console.log("Validation Failure");
+    console.log(validateFields.error.flatten().fieldErrors)
+    return {
+      errors: validateFields.error.flatten().fieldErrors,
+      message: "Missing or invalid fields. Failed to register member.",
+    };
+  }
+
+  const { name,email,department,shortBio } =
+    validateFields.data;
+
+  if (
+    !name ||
+    !email ||
+    !department
+    || !shortBio
+  ) {
+    console.log("All fields are required");
+    return { message: "All fields are required" };
+  }
+
+  try {
+    const existingProfessor = await professorsRepo.getByEmail(email);
+
+    if (existingProfessor) {
+      console.log("Professor already exists.");
+      return { message: "Professor already exists. Try SignIn" };
+    }
+
+    const status = await inviteProfessor(email);
+    const newProfessor: IProfessorBase = {
+      name,
+      email,
+      department,
+      shortBio,
+      calendlylink: "",
+      status:status
+    };
+
+    const createProffesor = await professorsRepo.create(newProfessor);
+
+    return { message: "Success" };
+  } catch (error: any) {
+    return {
+      message: "Error during member registration."
+    };
+  }
+}
+
+export async function inviteProfessor(emailValue: string) {
+  const organizationUrl = await getUserUri();
+  const uuid = organizationUrl.split("/").pop();
+  try {
+    const response = await fetch(
+      `https://api.calendly.com/organizations/${uuid}/invitations`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: emailValue }),
+      }
+    );
+    console.log("Organizations", response);
+    if (!response.ok) {
+      throw new Error(`Error fetching user info: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data.resource.status;
+  } catch (error) {
+    console.error("Error inviting professor", error);
+  }
+}
+
+export async function updateStatus(emailValue: string) {
+  const organizationUrl = await getUserUri();
+  const uuid = organizationUrl.split("/").pop();
+  console.log("UUID", uuid);
+  try {
+    const response = await fetch(
+      `https://api.calendly.com/organizations/${uuid}/invitations?email=${emailValue}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("Organizations", response);
+    if (!response.ok) {
+      console.error(`Error fetching user info: ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log("DAta", data);
+    if (data.collection[0].status === "accepted") {
+      console.log("Accepted the invitation");
+      try {
+        const response = await fetch(`${data.collection[0].user}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${CALENDLY_API_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        });
+        console.log("User Response", response);
+        if (!response.ok) {
+          console.error(`Error fetching user info: ${response.statusText}`);
+          throw new Error(`Error fetching user info: ${response.statusText}`);
+        }
+        const result = await response.json();
+        await db
+          .update(ProfessorTable)
+          .set({
+            status: data.collection[0].status,
+            calendlylink: result.resource.scheduling_url,
+          })
+          .where(eq(ProfessorTable.email, emailValue));
+      } catch (error) {
+        console.error("Error while updating status", error);
+      }
+    }
+  } catch (error) {
+    console.error("Error inviting professor", error);
   }
 }
