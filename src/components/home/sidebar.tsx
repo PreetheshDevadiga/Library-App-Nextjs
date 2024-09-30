@@ -125,7 +125,7 @@ export default function Sidebar({
         <div className="flex flex-row gap-1 p-4 items-center">
           <Link
             className={clsx("text-black hover:text-blue-600", {
-              "text-blue-600": pathname === "/admin/professors",
+              "text-blue-600": pathname === "/admin/Professors",
             })}
             href="/admin/Professors"
           >

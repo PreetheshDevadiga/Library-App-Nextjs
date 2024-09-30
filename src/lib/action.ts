@@ -1,5 +1,5 @@
 import { useTransition } from "react";
-'use server'
+"use server";
 
 import {
   IMember,
@@ -30,6 +30,7 @@ import { eq, and, ne } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { cloudinary } from "./cloudinary";
 import { IProfessorBase, professorBaseSchema } from "@/models/professor.model";
+import Razorpay from "razorpay";
 
 const memberRepo = new MemberRepository(db);
 
@@ -37,6 +38,11 @@ const bookRepo = new BookRepository(db);
 const transactionRepo = new TransactionRepository(db);
 const professorsRepo = new ProfessorRepository(db);
 const CALENDLY_API_TOKEN = process.env.NEXT_PUBLIC_CALENDLY_ACCESS_TOKEN;
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID as string,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 export interface State {
   errors?: { [key: string]: string[] };
@@ -592,7 +598,6 @@ export async function fetchTransactionByStatus(
   }
 }
 
-
 export async function aproveTransaction(id: number) {
   try {
     await transactionRepo.issueBook(id);
@@ -812,8 +817,8 @@ export async function getUserUri() {
     }
 
     const data = await response.json();
-    console.log("data",data)
-    return data.resource.current_organization; 
+    console.log("data", data);
+    return data.resource.current_organization;
     // This is the user's URI
   } catch (error) {
     console.error("Error fetching user URI", error);
@@ -821,16 +826,18 @@ export async function getUserUri() {
   }
 }
 
-
 // Fetch scheduled events for the user
 export async function getScheduledEvents() {
   const current_organization = await getUserUri(); // Get the logged-in user's URI
-
+  const currentDate = new Date().toISOString(); // Today's date
+  const nextWeekDate = new Date();
+  nextWeekDate.setDate(nextWeekDate.getDate() + 15); // One week from today
+  const nextWeek = nextWeekDate.toISOString();
   try {
     const response = await fetch(
       `https://api.calendly.com/scheduled_events?organization=${encodeURIComponent(
         current_organization
-      )}`,
+      )}&min_start_time=${currentDate}&max_start_time=${nextWeek}`,
       {
         method: "GET",
         headers: {
@@ -847,7 +854,7 @@ export async function getScheduledEvents() {
     }
 
     const data = await response.json();
-   
+
     return data.collection; // Return an array of scheduled events
   } catch (error) {
     console.error("Error fetching scheduled events", error);
@@ -865,7 +872,7 @@ export async function getEventUuid() {
       const startTime = event.start_time;
       const endTime = event.end_time;
       const gmeetLink = event.location.join_url; // Extract Google Meet link
-      const status=event.status;
+      const status = event.status;
       const membership = event.event_memberships[0]; // Get the first membership
       const profEmail = membership ? membership.user_email : null;
       return {
@@ -877,7 +884,6 @@ export async function getEventUuid() {
         status,
       };
     });
-
 
     return eventDetails;
   } else {
@@ -897,7 +903,7 @@ export async function getInviteeDetails() {
       const gmeetLink = event.gmeetLink;
       const professorEmail = event.profEmail;
       const event_uuid = event.uuid;
-      const status=event.status;
+      const status = event.status;
 
       const response = await fetch(
         `https://api.calendly.com/scheduled_events/${event_uuid}/invitees`,
@@ -938,7 +944,7 @@ export async function getInviteeDetails() {
         // Convert UTC time to IST using toLocaleString
         const istDateTime = date.toLocaleString("en-IN", options);
 
-        return istDateTime; 
+        return istDateTime;
       };
 
       const invitees = data.collection.map((invitee: any) => ({
@@ -950,13 +956,12 @@ export async function getInviteeDetails() {
         name: invitee.name,
         email: invitee.email,
         status,
-        rescheduleUrl:invitee.reschedule_url,
+        rescheduleUrl: invitee.reschedule_url,
       }));
 
       return invitees; // Return the array of invitee details for this event
     })
   );
-
 
   return inviteeDetails.flat();
 }
@@ -984,7 +989,7 @@ export async function getUserAppointments() {
       : userDetails!.userDetails.email;
     console.log("Email", userEmail);
     const scheduledDetails = await getInviteeDetails();
-    console.log("scheduledDetails",scheduledDetails);
+    console.log("scheduledDetails", scheduledDetails);
     const userAppointments = scheduledDetails.filter(
       (details) => details.email === userEmail
     );
@@ -1002,7 +1007,9 @@ export async function getUserAppointments() {
       })
     );
 
-    const activeAppointments =enrichedAppointments.filter((appointment)=>appointment.status==="active")
+    const activeAppointments = enrichedAppointments.filter(
+      (appointment) => appointment.status === "active"
+    );
     return activeAppointments;
   } catch (error) {
     console.error("Failed to get appointments", error);
@@ -1019,7 +1026,7 @@ export async function getAllAppointments() {
         const profDetails = await getProfessorByEmail(
           appointment.professorEmail
         );
-       
+
         return {
           ...appointment,
           profname: profDetails!.name,
@@ -1036,7 +1043,6 @@ export async function getAllAppointments() {
 
 export async function cancelAppointments(event_uuid: string) {
   try {
-
     const response = await fetch(
       `https://api.calendly.com/scheduled_events/${event_uuid}/cancellation`,
       {
@@ -1065,17 +1071,15 @@ export async function cancelAppointments(event_uuid: string) {
   }
 }
 
-export async function getAllProfessorsAppointments(){
+export async function getAllProfessorsAppointments() {
   try {
-
     const scheduledDetails = await getInviteeDetails();
     const enrichedAppointments = await Promise.all(
       scheduledDetails.map(async (appointment) => {
-        
         const profDetails = await getProfessorByEmail(
           appointment.professorEmail
         );
-        
+
         return {
           ...appointment,
           profname: profDetails!.name,
@@ -1093,7 +1097,6 @@ export async function getAllProfessorsAppointments(){
 }
 
 export async function addProfessor(prevState: State, formData: FormData) {
-
   const data = Object.fromEntries(formData.entries());
   const validateFields = professorBaseSchema.safeParse({
     name: formData.get("name"),
@@ -1104,22 +1107,16 @@ export async function addProfessor(prevState: State, formData: FormData) {
 
   if (!validateFields.success) {
     console.log("Validation Failure");
-    console.log(validateFields.error.flatten().fieldErrors)
+    console.log(validateFields.error.flatten().fieldErrors);
     return {
       errors: validateFields.error.flatten().fieldErrors,
       message: "Missing or invalid fields. Failed to register member.",
     };
   }
 
-  const { name,email,department,shortBio } =
-    validateFields.data;
+  const { name, email, department, shortBio } = validateFields.data;
 
-  if (
-    !name ||
-    !email ||
-    !department
-    || !shortBio
-  ) {
+  if (!name || !email || !department || !shortBio) {
     console.log("All fields are required");
     return { message: "All fields are required" };
   }
@@ -1139,7 +1136,7 @@ export async function addProfessor(prevState: State, formData: FormData) {
       department,
       shortBio,
       calendlylink: "",
-      status:status
+      status: status,
     };
 
     const createProffesor = await professorsRepo.create(newProfessor);
@@ -1147,7 +1144,7 @@ export async function addProfessor(prevState: State, formData: FormData) {
     return { message: "Success" };
   } catch (error: any) {
     return {
-      message: "Error during member registration."
+      message: "Error during member registration.",
     };
   }
 }
@@ -1228,5 +1225,21 @@ export async function updateStatus(emailValue: string) {
     }
   } catch (error) {
     console.error("Error inviting professor", error);
+  }
+}
+
+export async function performPayment(amount: number) {
+  const options = {
+    amount: amount * 100,
+    currency: "INR",
+    receipt: "receipt_order_74394",
+  };
+
+  try {
+    const order = await razorpay.orders.create(options);
+    console.log("Orders", order);
+    return { orderId: order.id };
+  } catch (error) {
+    console.error("Failed to perform payments", error);
   }
 }

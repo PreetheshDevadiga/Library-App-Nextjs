@@ -1,7 +1,7 @@
 import React from 'react';
 import ProfessorCard from '../../../components/professorsComponent/professorCard';
 import { fetchProfessor } from "../../../lib/action";
-
+import  Razorpay  from "../../../components/payments/razorpay"
 
 export default async function ProfessorsPage() {
     const professorsDetails= await fetchProfessor();
