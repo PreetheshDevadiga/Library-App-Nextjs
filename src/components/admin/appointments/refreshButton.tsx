@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { updateStatus } from "@/lib/action";
+import { Button } from "../../ui/button"
+import { updateStatus } from "../../../lib/action";
 import { RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 

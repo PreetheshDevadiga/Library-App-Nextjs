@@ -1,5 +1,5 @@
 import React from 'react';
-import ProfessorCard from '../../../components/professors/professorCard';
+import ProfessorCard from '../../../components/professorsComponent/professorCard';
 import { fetchProfessor } from "../../../lib/action";
 
 
@@ -18,8 +18,7 @@ export default async function ProfessorsPage() {
             id={professor.id}
             name={professor.name}
             department={professor.department}
-            bio={professor.shortBio}
-          />
+            bio={professor.shortBio} email={''} status={''}          />
         ))}
       </div>
     </div>

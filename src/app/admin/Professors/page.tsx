@@ -1,7 +1,7 @@
 import React from "react";
-import ProfessorCard from "../../../components/professors/professorCard";
+import ProfessorCard from "../../../components/professorsComponent/professorCard";
 import { fetchProfessor } from "../../../lib/action";
-import { AddProfessor } from "../../../components/professors/AddProfessor";
+import { AddProfessor } from "../../../components/professorsComponent/AddProfessor";
 
 export default async function Professor() {
   const allProffesors = await fetchProfessor();
