@@ -1,79 +1,66 @@
-"use client";
+"use client"
 
-import { Label } from "@radix-ui/react-label";
-import React, { useEffect, useState } from "react";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
-import { useActionState } from "react";
-import { updateBook, State, uploadImage } from "../../../lib/action";
-import { IBook } from "../../../models/book.model";
-import { useRouter } from "next/navigation";
-import { useToast } from "../../use-toast";
-import Image from "next/image";
+import { Label } from "@/components/ui/label"
+import React, { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { useActionState } from "react"
+import { updateBook, State, uploadImage } from "@/lib/action"
+import { IBook } from "@/models/book.model"
+import { useRouter } from "next/navigation"
+import { useToast } from "@/components/use-toast"
+import Image from "next/image"
 
 export function UpdateBookForm({ book }: { book: IBook }) {
-  const router = useRouter();
-  const updateBookById = updateBook.bind(null, book.id);
-  const initialState: State = { message: "", errors: {} };
-  const imageUrl = book.imageUrl ? book.imageUrl : "";
-  const [imageURL, setImageURL] = useState<string>(imageUrl);
-  const [isUploading, setIsUploading] = useState(false);
-  const [state, formAction] = useActionState(updateBookById, initialState);
-  const { toast } = useToast();
+  const router = useRouter()
+  const updateBookById = updateBook.bind(null, book.id)
+  const initialState: State = { message: "", errors: {} }
+  const imageUrl = book.imageUrl ? book.imageUrl : ""
+  const [imageURL, setImageURL] = useState<string>(imageUrl)
+  const [isUploading, setIsUploading] = useState(false)
+  const [state, formAction] = useActionState(updateBookById, initialState)
+  const { toast } = useToast()
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      setIsUploading(true);
-      const result = await uploadImage(file);
-      setIsUploading(false);
+      setIsUploading(true)
+      const result = await uploadImage(file)
+      setIsUploading(false)
       if (result.imageURL) {
-        console.log("image", result.imageURL);
-        setImageURL(result.imageURL);
+        console.log("image", result.imageURL)
+        setImageURL(result.imageURL)
       } else if (result.error) {
-        throw new Error(result.error);
+        throw new Error(result.error)
       }
     }
-  };
+  }
 
   useEffect(() => {
     if (state.message === "Success") {
       toast({
-
         title: "Book Updated",
         description: "The book has been successfully updated.",
-        className: "bg-green-500",
+        className: "bg-[#80E9FF] text-[#0A2540]",
         duration: 2000,
-      });
-      router.push("/admin/books");
+      })
+      router.push("/admin/books")
     }
-     
-  }, [state, router, toast]);
-
-  // if (state.errors) {
-  //   console.log("else if",state.message);
-  //   toast({
-  //     title: "Error Updating Book",
-  //     description:"There was an issue updating the book. Please try again.",
-  //     className: "bg-red-500",
-  //     duration: 2000,
-  //   });
-  // }
-
+  }, [state, router, toast])
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader className="pb-0 md:pb-6">
-        <CardTitle className="text-xl md:text-2xl font-bold text-center">
-          Update New Book
+    <Card className="w-full max-w-2xl mx-auto bg-[#0A2540] text-white border-[#1D3E6B]">
+      <CardHeader className="pb-0 md:pb-6 border-b border-[#1D3E6B]">
+        <CardTitle className="text-xl md:text-2xl font-bold text-center text-[#80E9FF]">
+          Update Book
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <form action={formAction} className="space-y-4 md:space-y-6">
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-sm font-medium">
+              <Label htmlFor="title" className="text-sm font-medium text-[#A3B8CC]">
                 Title
               </Label>
               <Input
@@ -83,18 +70,16 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 placeholder="Book Title"
                 autoFocus
                 required
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white placeholder-[#A3B8CC] focus:border-[#80E9FF]"
                 defaultValue={book.title}
               />
-              {state.errors?.title ? (
-                <p className="text-red-500 text-sm">{state.errors.title}</p>
-              ) : (
-                <div></div>
+              {state.errors?.title && (
+                <p className="text-red-400 text-sm">{state.errors.title}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="author" className="text-sm font-medium">
+              <Label htmlFor="author" className="text-sm font-medium text-[#A3B8CC]">
                 Author
               </Label>
               <Input
@@ -104,17 +89,15 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 placeholder="Author Name"
                 required
                 defaultValue={book.author}
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white placeholder-[#A3B8CC] focus:border-[#80E9FF]"
               />
-              {state.errors?.author ? (
-                <p className="text-red-500 text-sm">{state.errors.author}</p>
-              ) : (
-                <div></div>
+              {state.errors?.author && (
+                <p className="text-red-400 text-sm">{state.errors.author}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="publisher" className="text-sm font-medium">
+              <Label htmlFor="publisher" className="text-sm font-medium text-[#A3B8CC]">
                 Publisher
               </Label>
               <Input
@@ -124,17 +107,15 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 placeholder="Publisher Name"
                 required
                 defaultValue={book.publisher}
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white placeholder-[#A3B8CC] focus:border-[#80E9FF]"
               />
-              {state.errors?.publisher ? (
-                <p className="text-red-500 text-sm">{state.errors.publisher}</p>
-              ) : (
-                <div></div>
+              {state.errors?.publisher && (
+                <p className="text-red-400 text-sm">{state.errors.publisher}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="genre" className="text-sm font-medium">
+              <Label htmlFor="genre" className="text-sm font-medium text-[#A3B8CC]">
                 Genre
               </Label>
               <Input
@@ -144,17 +125,15 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 placeholder="Genre"
                 required
                 defaultValue={book.genre}
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white placeholder-[#A3B8CC] focus:border-[#80E9FF]"
               />
-              {state.errors?.genre ? (
-                <p className="text-red-500 text-sm">{state.errors.genre}</p>
-              ) : (
-                <div></div>
+              {state.errors?.genre && (
+                <p className="text-red-400 text-sm">{state.errors.genre}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="isbnNo" className="text-sm font-medium">
+              <Label htmlFor="isbnNo" className="text-sm font-medium text-[#A3B8CC]">
                 ISBN Number
               </Label>
               <Input
@@ -164,17 +143,15 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 placeholder="ISBN Number"
                 required
                 defaultValue={book.isbnNo}
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white placeholder-[#A3B8CC] focus:border-[#80E9FF]"
               />
-              {state.errors?.isbnNo ? (
-                <p className="text-red-500 text-sm">{state.errors.isbnNo}</p>
-              ) : (
-                <div></div>
+              {state.errors?.isbnNo && (
+                <p className="text-red-400 text-sm">{state.errors.isbnNo}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pages" className="text-sm font-medium">
+              <Label htmlFor="pages" className="text-sm font-medium text-[#A3B8CC]">
                 Pages
               </Label>
               <Input
@@ -184,17 +161,15 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 placeholder="Number of Pages"
                 required
                 defaultValue={book.pages}
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white placeholder-[#A3B8CC] focus:border-[#80E9FF]"
               />
-              {state.errors?.pages ? (
-                <p className="text-red-500 text-sm">{state.errors.pages}</p>
-              ) : (
-                <div></div>
+              {state.errors?.pages && (
+                <p className="text-red-400 text-sm">{state.errors.pages}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="totalCopies" className="text-sm font-medium">
+              <Label htmlFor="totalCopies" className="text-sm font-medium text-[#A3B8CC]">
                 Total Copies
               </Label>
               <Input
@@ -204,19 +179,15 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 placeholder="Total Copies"
                 required
                 defaultValue={book.totalCopies}
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white placeholder-[#A3B8CC] focus:border-[#80E9FF]"
               />
-              {state.errors?.totalCopies ? (
-                <p className="text-red-500 text-sm">
-                  {state.errors.totalCopies}
-                </p>
-              ) : (
-                <div></div>
+              {state.errors?.totalCopies && (
+                <p className="text-red-400 text-sm">{state.errors.totalCopies}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="price" className="text-sm font-medium">
+              <Label htmlFor="price" className="text-sm font-medium text-[#A3B8CC]">
                 Price
               </Label>
               <Input
@@ -226,18 +197,15 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 placeholder="Price"
                 required
                 defaultValue={book.price!}
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white placeholder-[#A3B8CC] focus:border-[#80E9FF]"
               />
-              {state.errors?.price ? (
-                <p className="text-red-500 text-sm">{state.errors.price}</p>
-              ) : (
-                <div></div>
+              {state.errors?.price && (
+                <p className="text-red-400 text-sm">{state.errors.price}</p>
               )}
-
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bookImage" className="text-sm font-medium">
+              <Label htmlFor="bookImage" className="text-sm font-medium text-[#A3B8CC]">
                 Book Image
               </Label>
               <Input
@@ -246,10 +214,9 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                required
-                className="w-full"
+                className="w-full bg-[#0F2D52] border-[#1D3E6B] text-white file:bg-[#1D3E6B] file:text-white file:border-0"
               />
-              {isUploading && <p>Uploading image...</p>}
+              {isUploading && <p className="text-[#80E9FF]">Uploading image...</p>}
               <input type="hidden" name="imageURL" value={imageURL} />
             </div>
             {imageUrl && (
@@ -259,17 +226,20 @@ export function UpdateBookForm({ book }: { book: IBook }) {
                   alt={"no image"}
                   width={70}
                   height={100}
-                  className="rounded-t-lg"
+                  className="rounded-lg"
                 />
               </div>
             )}
           </div>
 
-          <Button className="w-full mt-4 md:mt-6" type="submit">
+          <Button 
+            className="w-full mt-4 md:mt-6 bg-gradient-to-r from-[#80E9FF] to-[#635BFF] text-[#0A2540] hover:from-[#67DAFF] hover:to-[#5147FF] transition-all duration-300" 
+            type="submit"
+          >
             Update Book
           </Button>
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -85,13 +85,17 @@
   },
 
   "navbar": {
-    "title": "ಪುಸ್ತಕಕೈಪಿಡಿ",
-    "allBooks": "ಎಲ್ಲಾ ಪುಸ್ತಕಗಳು",
-    "myBooks": "ನನ್ನ ಪುಸ್ತಕಗಳು",
-    "myRequest": "ನನ್ನ ವಿನಂತಿಗಳು",
-    "professors":"ಪ್ರಾಧ್ಯಾಪಕರು",
-    "myAppointments":"ನನ್ನ ನೇಮಕಾತಿಗಳು"
-  },
+  "title": "ಪುಸ್ತಕಕೈಪಿಡಿ",
+  "allBooks": "ಎಲ್ಲಾ ಪುಸ್ತಕಗಳು",
+  "myBooks": "ನನ್ನ ಪುಸ್ತಕಗಳು",
+  "myRequest": "ನನ್ನ ವಿನಂತಿಗಳು",
+  "professors": "ಪ್ರಾಧ್ಯಾಪಕರು",
+  "myAppointments": "ನನ್ನ ನೇಮಕಾತಿಗಳು",
+  "allMembers": "ಎಲ್ಲಾ ಸದಸ್ಯರು",
+  "allTransactions": "ಎಲ್ಲಾ ವ್ಯವಹಾರಗಳು",
+  "allAppointments": "ಎಲ್ಲಾ ನೇಮಕಾತಿಗಳು",
+  "allProfessors" :"All Professors"
+},
   "bookCard": {
     "borrow": "ಎರವಲು ತೆಗೆದುಕೊ",
     "currencySymbol": "₹",

@@ -59,7 +59,7 @@ export function ProfileDropDown({ children }: ProfileDropDownProps) {
           </div>
         </div>
         <DropdownMenuSeparator className="bg-[#2D3348]" /> */}
-        <DropdownMenuItem className="focus:bg-[#242B42] focus:text-white">
+        <DropdownMenuItem className="focus:bg-[#242B42] focus:text-white" onClick={() => setIsDropdownOpen(false)}>
           <Link
             href="/home/viewprofile"
             className={clsx("flex w-full items-center px-2 py-2", {

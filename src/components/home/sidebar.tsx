@@ -1,4 +1,3 @@
-
 import { Button } from "../ui/button";
 import {
   Library,
@@ -13,6 +12,7 @@ import React from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface SidebarProps {
   isSidebarCollapsed: boolean;
@@ -24,176 +24,69 @@ export default function Sidebar({
   toggleSidebar,
 }: SidebarProps) {
   const pathname = usePathname();
+  const t = useTranslations('navbar');
+
+  const navItems = [
+    { href: "/admin", label: t('allBooks'), icon: Library },
+    { href: "/admin/members", label: t('allMembers'), icon: User },
+    { href: "/admin/transaction", label: t('allTransactions'), icon: HistoryIcon },
+    { href: "/admin/Professors", label: t('allProfessors'), icon: Calendar },
+    { href: "/admin/allAppointments", label: t('allAppointments'), icon: Calendar },
+  ];
+
   return (
     <aside
-      className={`bg-white ${
-        isSidebarCollapsed ? "w-20" : "w-35"
-      } h-full transition-all duration-300 ease-in-out flex flex-col items-start `}
+      className={`bg-[#0A2540] text-white ${
+        isSidebarCollapsed ? "w-20" : "w-64"
+      } h-full transition-all duration-300 ease-in-out flex flex-col shadow-lg`}
     >
-      <div className="flex items-center justify-between p-4 ">
-        {!isSidebarCollapsed && (
-          <>
-            <BookOpen className="h-8 w-8 text-primary pr-2" />{" "}
-            <h1 className="text-2xl font-bold text-primary">BookShelf</h1>
-          </>
-        )}
-        <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+      <div className="flex items-center justify-between p-4">
+        <Link href="/home" className="flex items-center space-x-2">
+          <div className={clsx(
+            "bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] p-2 rounded-lg",
+            isSidebarCollapsed ? "mx-auto" : ""
+          )}>
+            <BookOpen className="h-6 w-6 text-[#0A2540]" />
+          </div>
+          {!isSidebarCollapsed && (
+            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#7A73FF]">
+              BookShelf
+            </h1>
+          )}
+        </Link>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleSidebar}
+          className="text-[#A3B8CC] hover:text-white transition-colors duration-200"
+        >
           {isSidebarCollapsed ? (
-            <>
-              <BookOpen className="mx-auto h-8 w-8 text-primary" />{" "}
-              <ChevronRight className="h-8 w-8" />{" "}
-            </>
+            <ChevronRight className="h-6 w-6" />
           ) : (
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-6 w-6" />
           )}
         </Button>
       </div>
-      <nav className="mt-4">
-        <div className="flex flex-row gap-1 p-4 items-center ">
+      <nav className="mt-8 w-full">
+        {navItems.map((item) => (
           <Link
-            className={clsx("text-black hover:text-blue-600", {
-              "text-blue-600 ": pathname === "/admin",
-            })}
-            href="/admin"
+            key={item.href}
+            href={item.href}
+            className={clsx(
+              "flex items-center space-x-2 px-4 py-3 mb-2 mx-2 rounded-lg transition-all duration-200",
+              {
+                "bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] text-[#0A2540] shadow-lg":
+                  pathname === item.href,
+                "text-[#A3B8CC] hover:bg-[#1A3550] hover:text-white":
+                  pathname !== item.href,
+              }
+            )}
           >
-            <Library
-              className={`h-5 w-5 ${isSidebarCollapsed ? "mx-auto" : "mr-2"}`}
-            />
+            <item.icon className={`h-5 w-5 ${isSidebarCollapsed ? "mx-auto" : "mr-3"}`} />
+            {!isSidebarCollapsed && <span>{item.label}</span>}
           </Link>
-
-          {!isSidebarCollapsed && (
-            <Link
-              className={clsx("text-black hover:text-blue-600", {
-                "text-blue-600 ": pathname === "/admin",
-              })}
-              href="/admin"
-            >
-              All Books
-            </Link>
-          )}
-        </div>
-
-        <div className="flex flex-row gap-1 p-4 items-center">
-          <Link
-            className={clsx("text-black hover:text-blue-600", {
-              "text-blue-600": pathname === "/admin/members",
-            })}
-            href="/admin/members"
-          >
-            <User
-              className={`h-5 w-5 ${isSidebarCollapsed ? "mx-auto" : "mr-2"}`}
-            />
-          </Link>
-
-          {!isSidebarCollapsed && (
-            <Link
-              className={clsx("text-black hover:text-blue-600", {
-                "text-blue-600": pathname === "/admin/members",
-              })}
-              href="/admin/members"
-            >
-              All Members
-            </Link>
-          )}
-        </div>
-
-        <div className="flex flex-row gap-1 p-4 items-center">
-          <Link
-            className={clsx("text-black hover:text-blue-600", {
-              "text-blue-600": pathname === "/admin/transaction",
-            })}
-            href="/admin/transaction"
-          >
-            <HistoryIcon
-              className={`h-5 w-5 ${isSidebarCollapsed ? "mx-auto" : "mr-2"}`}
-            />
-          </Link>
-
-          {!isSidebarCollapsed && (
-            <Link
-              className={clsx("text-black hover:text-blue-600", {
-                "text-blue-600": pathname === "/admin/transaction",
-              })}
-              href="/admin/transaction"
-            >
-              All Transaction
-            </Link>
-          )}
-
-        </div>
-
-        <div className="flex flex-row gap-1 p-4 items-center">
-          <Link
-            className={clsx("text-black hover:text-blue-600", {
-              "text-blue-600": pathname === "/admin/Professors",
-            })}
-            href="/admin/Professors"
-          >
-            <Calendar
-              className={`h-5 w-5 ${isSidebarCollapsed ? "mx-auto" : "mr-2"}`}
-            />
-          </Link>
-
-          {!isSidebarCollapsed && (
-            <Link
-              className={clsx("text-black hover:text-blue-600", {
-                "text-blue-600": pathname === "/admin/Professors",
-              })}
-              href="/admin/Professors"
-            >
-              All Professors
-            </Link>
-          )}
-          
-        </div>
-
-        <div className="flex flex-row gap-1 p-4 items-center">
-          <Link
-            className={clsx("text-black hover:text-blue-600", {
-              "text-blue-600": pathname === "/admin/allAppointments",
-            })}
-            href="/admin/allAppointments"
-          >
-            <Calendar
-              className={`h-5 w-5 ${isSidebarCollapsed ? "mx-auto" : "mr-2"}`}
-            />
-          </Link>
-
-          {!isSidebarCollapsed && (
-            <Link
-              className={clsx("text-black hover:text-blue-600", {
-                "text-blue-600": pathname === "/admin/allAppointments",
-              })}
-              href="/admin/allAppointments"
-            >
-              All Appointments
-            </Link>
-          )}
-          
-        </div>
-
+        ))}
       </nav>
     </aside>
-  );
-}
-
-function SidebarButton({
-  icon,
-  label,
-  isActive,
-  onClick,
-  isSidebarCollapsed,
-}: any) {
-  return (
-    <Button
-      variant={isActive ? "secondary" : "ghost"}
-      className={`w-full justify-start ${
-        isSidebarCollapsed ? "px-0" : "px-4"
-      } mb-2`}
-      onClick={onClick}
-    >
-      {icon}
-      {!isSidebarCollapsed && <span>{label}</span>}
-    </Button>
   );
 }

@@ -1,28 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from 'next/link'
-import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
+import React from "react";
+import { Suspense } from 'react';
 import { ProfileDropDown } from "../../profile/profileDropdown";
 import { SearchBar } from "@/components/home/search";
-import { Suspense } from 'react'
 
 export const AdminNavBar = ({ children }: { children: React.ReactNode }) => {
-
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-    <nav className="bg-white shadow-md sticky top-0   text-black p-4 z-50">
-      <div className="container mx-auto flex justify-between items-center">
-      <SearchBar />
-        <div className="flex flex-row justify-center items-center gap-8">
-          <ProfileDropDown>
-            {children}
-          </ProfileDropDown>
-        </div>
+    <Suspense fallback={
+      <div className="bg-[#0A2540] text-white p-4 flex items-center justify-center">
+        <div className="animate-pulse bg-[#1A3550] h-8 w-32 rounded"></div>
       </div>
-    </nav>
+    }>
+      <nav className="bg-[#0A2540] shadow-lg sticky top-0 text-white p-4 z-50">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex-1 max-w-md">
+            <SearchBar />
+          </div>
+          <div className="flex flex-row justify-center items-center gap-4">
+            <ProfileDropDown>
+              {children}
+            </ProfileDropDown>
+          </div>
+        </div>
+      </nav>
     </Suspense>
-    
   );
 };
