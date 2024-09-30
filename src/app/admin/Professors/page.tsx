@@ -1,10 +1,12 @@
 import React from "react";
 import ProfessorCard from "../../../components/professorsComponent/professorCard";
-import { fetchProfessor } from "../../../lib/action";
+import { fetchProfessor, fetchUserDetails } from "../../../lib/action";
 import { AddProfessor } from "../../../components/professorsComponent/AddProfessor";
 
 export default async function Professor() {
   const allProffesors = await fetchProfessor();
+  const currentUserInfo = await fetchUserDetails();
+  const currentUserDetails = currentUserInfo?.userDetails
 
   return (
     <div className="min-h-screen bg-[#0A2540] p-6">
@@ -22,8 +24,11 @@ export default async function Professor() {
             name={professor.name}
             department={professor.department}
             bio={professor.shortBio}
-            email={professor.email}
-            status={professor.status}
+            email={professor.email as string} 
+            status={professor.status as string}
+            userName={currentUserDetails!.firstName}
+            userEmail={currentUserDetails!.email}
+            userContact={currentUserDetails?.phone as number}
           />
         ))}
       </div>

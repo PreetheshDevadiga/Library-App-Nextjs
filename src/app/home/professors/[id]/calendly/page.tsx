@@ -16,7 +16,7 @@ export default async function CalendlyPage({
   return (
     <>
       <CalendlyWidget
-        calendlyUrl={professorsDetails!.calendlylink}
+        calendlyUrl={professorsDetails!.calendlylink as string}
         professorName={professorsDetails!.name}
         clientName={clientDetails!.userDetails.firstName}
         clientEmail={clientDetails!.userDetails.email}

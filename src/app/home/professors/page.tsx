@@ -1,10 +1,12 @@
-import React from 'react';
-import ProfessorCard from '../../../components/professorsComponent/professorCard';
-import { fetchProfessor } from "../../../lib/action";
-
+import React from "react";
+import ProfessorCard from "../../../components/professorsComponent/professorCard";
+import { fetchProfessor, fetchUserDetails } from "../../../lib/action";
+import Razorpay from "../../../components/payments/razorpay";
 
 export default async function ProfessorsPage() {
-    const professorsDetails= await fetchProfessor();
+  const professorsDetails = await fetchProfessor();
+  const currentUserInfo = await fetchUserDetails();
+  const currentUserDetails = currentUserInfo?.userDetails;
 
   return (
     <div className="min-h-screen bg-[#0A2540] p-6">
@@ -18,12 +20,15 @@ export default async function ProfessorsPage() {
             id={professor.id}
             name={professor.name}
             department={professor.department}
-            bio={professor.shortBio} email={''} status={''}          />
+            bio={professor.shortBio}
+            email={professor.email as string} 
+            status={professor.status as string}
+            userName={currentUserDetails!.firstName}
+            userEmail={currentUserDetails!.email}
+            userContact={currentUserDetails?.phone as number}
+          />
         ))}
       </div>
     </div>
   );
-};
-
-
-
+}

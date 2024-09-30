@@ -5,8 +5,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card
 import { Button } from "../ui/button";
 import { User, Briefcase, BookOpen } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'
-import RefreshProfessor from "../admin/appointments/refreshButton"
+import { usePathname } from 'next/navigation';
+import RefreshProfessor from "../admin/appointments/refreshButton";
+import BookAppointment from "../payments/razorpay"
 
 interface ProfessorCardProps {
   id: number;
@@ -15,10 +16,15 @@ interface ProfessorCardProps {
   bio: string;
   email: string;
   status: string;
+  userName:string;
+  userEmail:string;
+  userContact:number;
 }
 
-const ProfessorCard: React.FC<ProfessorCardProps> = ({ id, name, department, bio, email, status }) => {
+const ProfessorCard: React.FC<ProfessorCardProps> = ({ id, name, department, bio, email, status ,userContact,userEmail,userName}) => {
   const path = usePathname();
+
+  const isHomeRoute = path.includes("/home");
 
   return (
     <Card className="bg-[#0D2E4B] text-white border border-[#1A3550] overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 flex flex-col h-full">
@@ -38,13 +44,7 @@ const ProfessorCard: React.FC<ProfessorCardProps> = ({ id, name, department, bio
         </div>
       </CardContent>
       <CardFooter className="p-4 bg-[#0A2540] flex gap-2 justify-between items-center">
-        <Link href={`${path}/${id}/calendly`} className="flex-1">
-          <Button 
-            className="w-full bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] text-[#0A2540] hover:from-[#00C4EF] hover:to-[#6A63EF] transition-all duration-300 font-semibold py-2 px-4 rounded-full shadow-lg hover:shadow-xl"
-          >
-            Book Appointment
-          </Button>
-        </Link>
+        <BookAppointment id={id} path={path} isHomeRoute={isHomeRoute} userContact={userContact} userEmail={userEmail} userName={userName}/>
         <RefreshProfessor professorEmail={email} status={status} />
       </CardFooter>
     </Card>
