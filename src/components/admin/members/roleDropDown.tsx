@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import {
   Select,
@@ -6,33 +7,37 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../ui/select";
+} from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { updateMemberRole } from "@/lib/action";
+import { ChevronDown } from "lucide-react";
 
-export default function RoleDropdown({ memberId,memberRole }: { memberId: number ,memberRole:string}) {
+export default function RoleDropdown({ memberId, memberRole }: { memberId: number, memberRole: string }) {
   const [role, setRole] = useState(memberRole);
   const router = useRouter();
 
-  // This function will be called immediately when a new role is selected
   const handleRoleChange = async (newRole: string) => {
-    setRole(newRole); // Update local state
-    await updateMemberRole(memberId, newRole); // Call the API or function to update role in the backend
-    router.refresh(); // Refresh the UI after update
+    setRole(newRole);
+    await updateMemberRole(memberId, newRole);
+    router.refresh();
   };
 
   return (
-    <div className="px-4">
+    <div className="px-2">
       <Select
         value={role}
-        onValueChange={(newRole) => handleRoleChange(newRole)} // Directly handle role change
+        onValueChange={(newRole) => handleRoleChange(newRole)}
       >
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full bg-[#242B42] border-[#2D3348] text-white hover:bg-[#2D3348] focus:ring-[#635BFF] focus:ring-offset-[#1A1F36] focus:ring-offset-2 transition-colors">
           <SelectValue placeholder="Select role" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="user">User</SelectItem>
-          <SelectItem value="admin">Admin</SelectItem>
+        <SelectContent className="bg-[#242B42] border-[#2D3348] text-white">
+          <SelectItem value="user" className="hover:bg-[#2D3348] focus:bg-[#2D3348] focus:text-white">
+            User
+          </SelectItem>
+          <SelectItem value="admin" className="hover:bg-[#2D3348] focus:bg-[#2D3348] focus:text-white">
+            Admin
+          </SelectItem>
         </SelectContent>
       </Select>
     </div>

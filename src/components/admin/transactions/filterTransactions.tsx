@@ -3,6 +3,8 @@
 import { useSearchParams, usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChevronDown } from "lucide-react";
 
 export default function FilterTransaction() {
   const statuses = ["All", "Pending", "Returned", "Issued", "Rejected"];
@@ -11,7 +13,6 @@ export default function FilterTransaction() {
   const { replace } = useRouter();
   const router = useRouter();
   
- 
   const [selectedFilter, setSelectedFilter] = useState<string>(searchParams.get("filter") || "All");
 
   useEffect(() => {
@@ -19,8 +20,7 @@ export default function FilterTransaction() {
     setSelectedFilter(currentFilter); 
   }, [searchParams, pathname, replace]);
 
-  const handleFilterOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = e.target.value;
+  const handleFilterOptionChange = (selectedValue: string) => {
     setSelectedFilter(selectedValue);
 
     const params = new URLSearchParams(searchParams);
@@ -37,16 +37,21 @@ export default function FilterTransaction() {
   };
 
   return (
-    <select
-      className="p-2 border rounded-md"
-      value={selectedFilter}
-      onChange={handleFilterOptionChange}
-    >
-      {statuses.map((status) => (
-        <option key={status} value={status}>
-          {status}
-        </option>
-      ))}
-    </select>
+    <Select value={selectedFilter} onValueChange={handleFilterOptionChange}>
+      <SelectTrigger className="w-[180px] bg-[#242B42] border-[#2D3348] text-white hover:bg-[#2D3348] focus:ring-[#635BFF] focus:ring-offset-[#1A1F36] focus:ring-offset-2 transition-colors">
+        <SelectValue placeholder="Select filter" />
+      </SelectTrigger>
+      <SelectContent className="bg-[#242B42] border-[#2D3348] text-white">
+        {statuses.map((status) => (
+          <SelectItem 
+            key={status} 
+            value={status}
+            className="hover:bg-[#2D3348] focus:bg-[#2D3348] focus:text-white"
+          >
+            {status}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
