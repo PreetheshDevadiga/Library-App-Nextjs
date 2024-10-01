@@ -1,13 +1,20 @@
-"use client"
+"use client";
 
-import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Button } from "../ui/button";
-import { User, Briefcase, BookOpen } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { User, Briefcase, BookOpen, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import RefreshProfessor from "../admin/appointments/refreshButton";
-import BookAppointment from "../payments/razorpay"
+import BookAppointment from "../payments/razorpay";
+import DeleteProfessor from "../../components/admin/appointments/deleteProfessor";
 
 interface ProfessorCardProps {
   id: number;
@@ -16,18 +23,28 @@ interface ProfessorCardProps {
   bio: string;
   email: string;
   status: string;
-  userName:string;
-  userEmail:string;
-  userContact:number;
+  userName: string;
+  userEmail: string;
+  userContact: number;
 }
 
-const ProfessorCard: React.FC<ProfessorCardProps> = ({ id, name, department, bio, email, status ,userContact,userEmail,userName}) => {
+const ProfessorCard: React.FC<ProfessorCardProps> = ({
+  id,
+  name,
+  department,
+  bio,
+  email,
+  status,
+  userContact,
+  userEmail,
+  userName,
+}) => {
   const path = usePathname();
 
   const isHomeRoute = path.includes("/home");
 
   return (
-    <Card className="bg-[#0D2E4B] text-white border border-[#1A3550] overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 flex flex-col h-full">
+    <Card className="bg-[#0D2E4B] text-white border border-[#1A3550] overflow-hidden transition-all duration-300  flex flex-col h-full">
       <CardHeader className="bg-gradient-to-r from-[#00D4FF] to-[#7A73FF] p-4">
         <CardTitle className="text-xl font-bold text-[#0A2540] flex items-center space-x-2">
           <User className="w-6 h-6" />
@@ -46,7 +63,9 @@ const ProfessorCard: React.FC<ProfessorCardProps> = ({ id, name, department, bio
       <CardFooter className="p-4 bg-[#0A2540] flex gap-2 justify-between items-center">
         <BookAppointment id={id} path={path} isHomeRoute={isHomeRoute} userContact={userContact} userEmail={userEmail} userName={userName}/>
         <RefreshProfessor professorEmail={email} status={status} />
+        {/* <DeleteProfessor id={id} name={name} /> */}
       </CardFooter>
+      
     </Card>
   );
 };
